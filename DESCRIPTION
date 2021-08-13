@@ -1,0 +1,24 @@
+Package: gpls
+Type: Package
+Title: Fit Generalised Penalised Least Squares models
+Version: 0.1.0
+Authors@R: 
+    c(person(given = "Stijn", family = "Hawinkel", 
+    email = "stijn.hawinkel@psb-vib.ugent.be", 
+    role=c("cre", "aut"), comment = c(ORCID = "0000-0002-4501-5180")))
+Description: Combine generalised least squares methodology from the nlme package 
+    for dealing with autocorrelation with penalised least squares methods from 
+    the glmnet package to deal with high dimensionality. This gpls packages glues 
+    them together thriugh an iterative loop.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Imports: glmnet, nlme
+Suggests:
+    knitr,rmarkdown,testthat
+VignetteBuilder: knitr
+Depends: R (>= 4.0)
+biocViews: Transcriptomics
+BugReports: GitHub
+

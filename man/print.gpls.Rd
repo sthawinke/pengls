@@ -11,6 +11,9 @@
 
 \item{...}{further arguments, currently ignored}
 }
+\value{
+Prints output to console
+}
 \description{
 Print a summary of a gpls model
 }

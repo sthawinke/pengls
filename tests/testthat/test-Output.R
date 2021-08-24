@@ -19,7 +19,7 @@ gplsFit = gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", 
 glsSt = corStruct, nfolds = 5)
 test_that("Function returns list with correct elements", {
     expect_s3_class(gplsFit, "gpls")
-    expect_silent(print(gplsFit))
-    expect_s3_class(coef(gplsFit), "dgCMatrix")
+    expect_output(print(gplsFit))
+    expect_s4_class(coef(gplsFit), "dgCMatrix")
 }
 )

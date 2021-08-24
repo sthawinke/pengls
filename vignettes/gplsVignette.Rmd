@@ -27,6 +27,8 @@ library(BiocManager)
 install("gpls", update = FALSE)
 ```
 
+Once installed, it can be loaded and version info printed.
+
 ```{r loadRCMpackage}
 suppressPackageStartupMessages(library(gpls))
 cat("gpls package version", as.character(packageVersion("gpls")), "\n")
@@ -34,7 +36,7 @@ cat("gpls package version", as.character(packageVersion("gpls")), "\n")
 
 # Illustration
 
-# Spatial autocorrelation
+## Spatial autocorrelation
 
 We first create a toy dataset with spatial coordinates.
 
@@ -77,5 +79,16 @@ gplsCoef = coef(gplsFit)
 gplsPred = predict(gplsFit)
 ```
 
+## Temporal autocorrelation
 
+The method can also account for temporal autocorrelation by defining another correlation structure from the _nlme_ package, 
+
+```{r timeSetup}
+### Example 2: timecourse data
+dfTime = data.frame("a" = a, "b" = b, "t" = seq_len(50))
+corStructTime = corAR1(form = ~ t, value = 0.5)
+gplsFit = gpls(data = dfTime, outVar = "a",
+xNames = grep(names(dfTime), pattern = "b", value =TRUE),
+glsSt = corStructTime, nfolds = 5)
+```
 

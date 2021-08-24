@@ -11,6 +11,9 @@
 
 \item{...}{further arguments, currently ignored}
 }
+\value{
+The vector of coefficients
+}
 \description{
 Extract coefficients from a gpls model
 }

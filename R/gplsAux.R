@@ -4,6 +4,7 @@
 #'
 #' @method coef gpls
 #' @export
+#' @return The vector of coefficients
 coef.gpls = function(object, ...) {
     coef(object$glmnet)
 }
@@ -11,15 +12,18 @@ coef.gpls = function(object, ...) {
 #' @param object A gpls object
 #' @param ... further arguments, currently ignored
 #' @export
+#' @importFrom stats predict
 #' @method predict gpls
+#' @return A vector with predicted values
 predict.gpls = function(object, ...) {
-    predict(object$glmnet, newx = object$data)
+    predict(object$glmnet, newx = as.matrix(object$data[, object$xNames]))
 }
 #' Print a summary of a gpls model
 #' @param x A gpls object
 #' @param ... further arguments, currently ignored
 #' @export
+#' @return Prints output to console
 #' @method print gpls
 print.gpls = function(x, ...) {
-    cat("GPLS model with", sum(coef(x)!=0)-1, "non-zero coefficients,\n and with", corStruct)
+    cat("GPLS model with", sum(coef(x)!=0)-1, "non-zero coefficients,\n and with", print(x$gls$corStruct))
 }

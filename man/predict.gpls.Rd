@@ -11,6 +11,9 @@
 
 \item{...}{further arguments, currently ignored}
 }
+\value{
+A vector with predicted values
+}
 \description{
 Make predictions from a gpls model
 }

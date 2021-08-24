@@ -52,7 +52,7 @@
 #' xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 #' glsSt = corStructTime, nfolds = 5)
 gpls = function(data, glsSt, xNames, outVar, corMat, lambda,
-                     maxIter = 3e1, tol = 5e-2, verbose = FALSE,
+                maxIter = 3e1, tol = 5e-2, verbose = FALSE,
                 optControl = lmeControl(opt = "optim", maxIter = 5e2, msVerbose = verbose,
                                         msMaxIter = 5e2, niterEM = 1e3,
                                         msMaxEval=1e3), nfolds = 10,  ...){
@@ -61,8 +61,7 @@ gpls = function(data, glsSt, xNames, outVar, corMat, lambda,
         corMat = diag(nrow(data)) #Starting values for correlation matrix
    if(missing(lambda)){
        if(verbose) cat("Fitting naieve model...\n")
-       naieveFit = cv.glmnet(x = as.matrix(data[,xNames]), y = data[,outVar],
-                             nfolds = nfolds, ...)
+       naieveFit = cv.glmnet(x = as.matrix(data[,xNames]), y = data[,outVar], nfolds = nfolds, ...)
        lambda = naieveFit$lambda.1se
    }
     preds = mcA = data[[outVar]] - mean(data[[outVar]]) #Starting values for predictions
@@ -87,7 +86,7 @@ gpls = function(data, glsSt, xNames, outVar, corMat, lambda,
     }
     out = list("glmnet" = glmnetFit, "gls" = margCorMat, "data" = data,
                "xNames" = xNames, "outVar" = outVar, "glsSt" = glsSt,
-               "lambda" = lambda)
+               "lambda" = lambda, "iter" = iter, "conv" = conv)
     class(out) = "gpls"
     return(out)
 }

@@ -68,7 +68,7 @@ Finally the model is fitted with a single outcome variable and large number of r
 ```{r spatialFit}
 #Fit the gpls model, for simplicity for a simple lambda
 gplsFit = gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
-glsSt = corStruct, lambda = 0.2)
+glsSt = corStruct, lambda = 0.2, verbose = TRUE)
 ```
 
 Standard extraction functions like print(), coef() and predict() are defined for the new "gpls" object.
@@ -84,17 +84,16 @@ gplsPred = predict(gplsFit)
 The method can also account for temporal autocorrelation by defining another correlation structure from the _nlme_ package, 
 
 ```{r timeSetup}
-### Example 2: timecourse data
-dfTime = data.frame("a" = a, "b" = b, "t" = seq_len(50))
+dfTime = data.frame("a" = a, "b" = b, "t" = seq_len(n))
 corStructTime = corAR1(form = ~ t, value = 0.5)
 ```
 
-The fitting command is similar
+The fitting command is similar, this time the $\lambda$ parameter is found through cross-validation of the naive glmnet. We choose $\alpha=0.5$ this time, fitting an elastic net model.
 
 ```{r timeFit}
-gplsFitTime = gpls(data = dfTime, outVar = "a",
+gplsFitTime = gpls(data = dfTime, outVar = "a", verbose = TRUE,
 xNames = grep(names(dfTime), pattern = "b", value =TRUE),
-glsSt = corStructTime, nfolds = 5)
+glsSt = corStructTime, nfolds = 5, alpha = 0.5)
 ```
 
 Show the output

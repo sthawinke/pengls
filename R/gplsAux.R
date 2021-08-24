@@ -25,5 +25,6 @@ predict.gpls = function(object, ...) {
 #' @return Prints output to console
 #' @method print gpls
 print.gpls = function(x, ...) {
-    cat("GPLS model with correlation structure:", class(x$glsSt)[1], "\n and", sum(coef(x)!=0)-1, "non-zero coefficients")
+    Class = class(x$glsSt)[1]
+    cat("GPLS model with correlation structure:", Class, "\n and", sum(coef(x)!=0)-1, "non-zero coefficients")
 }

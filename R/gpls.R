@@ -86,7 +86,7 @@ gpls = function(data, glsSt, xNames, outVar, corMat, lambda,
         warning("No convergence achieved in gpls!\n", immediate. = TRUE)
     }
     out = list("glmnet" = glmnetFit, "gls" = margCorMat, "data" = data,
-               "xNames" = xNames, "outVar" = outVar)
+               "xNames" = xNames, "outVar" = outVar, "glsSt" = glsSt)
     class(out) = "gpls"
     return(out)
 }

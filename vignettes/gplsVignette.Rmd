@@ -87,8 +87,20 @@ The method can also account for temporal autocorrelation by defining another cor
 ### Example 2: timecourse data
 dfTime = data.frame("a" = a, "b" = b, "t" = seq_len(50))
 corStructTime = corAR1(form = ~ t, value = 0.5)
-gplsFit = gpls(data = dfTime, outVar = "a",
+```
+
+The fitting command is similar
+
+```{r timeFit}
+gplsFitTime = gpls(data = dfTime, outVar = "a",
 xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 glsSt = corStructTime, nfolds = 5)
 ```
+
+Show the output
+
+```{r}
+gplsFitTime
+```
+
 

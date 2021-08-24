@@ -9,7 +9,6 @@ gpls(
   glsSt,
   xNames,
   outVar,
-  coords = c("x", "y"),
   corMat,
   lambda,
   maxIter = 30,
@@ -30,8 +29,6 @@ gpls(
 
 \item{outVar}{name of the outcome variable in data}
 
-\item{coords}{Names of the spatial covariates, used by glsSt}
-
 \item{corMat}{a starting value for th correlation matrix. Taken to be a diagonal matrix if missing}
 
 \item{lambda}{The penalty value for glmnet. If missing, the optimal value of vanilla glmnet without autocorrelation component is used}
@@ -47,11 +44,11 @@ gpls(
 \item{nfolds}{an integer, the number of folds used in cv.glmnet to find lambda}
 
 \item{...}{passed onto glmnet::glmnet}
-
-\item{Coef}{a starting value for coefficients}
 }
 \value{
-
+A list with components
+\item{corMat}{The square root of the inverse correlation matrix}
+\item{Coef}{The coefficients of the correlation object}
 }
 \description{
 Iterative estimation of penalised generalised least squares
@@ -63,7 +60,9 @@ Cross-validation needs to be implemented by the user; since the data exhibits au
 this may need to be blocked cross-validation or some other dedicated method.
 }
 \examples{
+### Example 1: spatial data
 # Define the dimensions of the data
+library(nlme)
 n = 50 #Sample size
 p = 100 #Number of features
 g = 10 #Size of the grid
@@ -76,8 +75,16 @@ a = rnorm(n)
 b = matrix(rnorm(p*n), n , p)
 #Compile to a matrix
 df = data.frame("a" = a, "b" = b, GridSample)
-# Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 ang range 5
+# Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 and range 5
 corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
 #Fit the gpls model, for simplicity for a simple lambda
-gplsFit = gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE), glsSt = corStruct, nfolds = 5)
+gplsFit = gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+glsSt = corStruct, nfolds = 5)
+
+### Example 2: timecourse data
+dfTime = data.frame("a" = a, "b" = b, "t" = seq_len(50))
+corStructTime = corAR1(form = ~ t, value = 0.5)
+gplsFit = gpls(data = dfTime, outVar = "a",
+xNames = grep(names(dfTime), pattern = "b", value =TRUE),
+glsSt = corStructTime, nfolds = 5)
 }

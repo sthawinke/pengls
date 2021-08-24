@@ -11,6 +11,8 @@ getCorMat(data, glsSt, Coef = c(coef(glsSt)), control, outVar)
 
 \item{glsSt}{The correlation object for gls}
 
+\item{Coef}{optional vector of coefficients to glsSt}
+
 \item{control}{the list of control arguments for gls}
 
 \item{outVar}{the name of the outcome variable}

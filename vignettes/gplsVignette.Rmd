@@ -16,7 +16,23 @@ vignette: >
 
 # Introduction
 
-This vignette demonstrates the use of the _gpls_ package for high-dimensional data with spatial or temporal autocorrelation.
+This vignette demonstrates the use of the _gpls_ package for high-dimensional data with spatial or temporal autocorrelation. It consists of an iterative loop around the _nlme_ and _glmnet_ packages.
+
+# Installation instuction
+
+The _gpls_ package is available from BioConductor, and can be installed as follows:
+
+```{r install, eval = FALSE}
+library(BiocManager)
+install("gpls", update = FALSE)
+```
+
+```{r loadRCMpackage}
+suppressPackageStartupMessages(library(gpls))
+cat("gpls package version", as.character(packageVersion("gpls")), "\n")
+```
+
+# Illustration
 
 # Spatial autocorrelation
 
@@ -45,17 +61,18 @@ The _gpls_ method requires prespecification of a functional form for the autocor
 corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
 ```
 
-Finally the model is fitted with a single outcome variable and large number of regressors, with the chosen covariance structure and doing 5-fold cross validation.
+Finally the model is fitted with a single outcome variable and large number of regressors, with the chosen covariance structure and for a prespecified penalty parameter $\lambda=0.2$.
 
 ```{r spatialFit}
 #Fit the gpls model, for simplicity for a simple lambda
 gplsFit = gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
-glsSt = corStruct, nfolds = 5)
+glsSt = corStruct, lambda = 0.2)
 ```
 
-Standard extraction functions like coef() and predict() are defined for the new "gpls" object.
+Standard extraction functions like print(), coef() and predict() are defined for the new "gpls" object.
 
 ```{r standardExtract}
+gplsFit
 gplsCoef = coef(gplsFit)
 gplsPred = predict(gplsFit)
 ```

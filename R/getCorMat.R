@@ -20,5 +20,5 @@ getCorMat = function(data, glsSt, Coef = c(coef(glsSt)), control, outVar){
           control = list(maxit = control$msMaxIter, reltol = control$msTol)) #Find the parameters
     coef(glsSt) <- optRes$par
     corMat = corMatrix(glsSt, corr = FALSE) #The inverse square root glsSt matrix, see ?corMat
-    return(list("corMat" = corMat, "Coef" = optRes$par))
+    return(list("corMat" = corMat, "Coef" = optRes$par, "glsSt" = glsSt))
 }

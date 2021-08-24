@@ -51,14 +51,6 @@
 #' gplsFit = gpls(data = dfTime, outVar = "a",
 #' xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 #' glsSt = corStructTime, nfolds = 5)
-#' @rdname coef
-#' @export
-setGeneric("coef", function(object, ...) standardGeneric("coef"))
-#' @rdname RCM
-#' @export
-setMethod("coef", "gpls", function(object, ...) {
-    coef(objec$glmnet)
-})
 gpls = function(data, glsSt, xNames, outVar, corMat, lambda,
                      maxIter = 3e1, tol = 5e-2, verbose = FALSE,
                 optControl = lmeControl(opt = "optim", maxIter = 5e2, msVerbose = verbose,

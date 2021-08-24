@@ -53,4 +53,12 @@ gplsFit = gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", 
 glsSt = corStruct, nfolds = 5)
 ```
 
+Standard extraction functions like coef() and predict() are defined for the new "gpls" object.
+
+```{r standardExtract}
+gplsCoef = coef(gplsFit)
+gplsPred = predict(gplsFit)
+```
+
+
 

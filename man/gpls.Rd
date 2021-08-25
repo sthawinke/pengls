@@ -11,6 +11,8 @@ gpls(
   outVar,
   corMat,
   lambda,
+  foldid,
+  cvType = c("random", "blocked"),
   maxIter = 30,
   tol = 0.05,
   verbose = FALSE,
@@ -32,6 +34,11 @@ gpls(
 \item{corMat}{a starting value for th correlation matrix. Taken to be a diagonal matrix if missing}
 
 \item{lambda}{The penalty value for glmnet. If missing, the optimal value of vanilla glmnet without autocorrelation component is used}
+
+\item{foldid}{An optional vector deffining the fold}
+
+\item{cvType}{A character vector defining the type of cross-validation.
+Either "random" or "blocked", ignored if foldid is provided}
 
 \item{maxIter}{maximum number of iterations between glmnet and gls}
 

@@ -5,9 +5,11 @@
 #' @param optControl control arguments, passed onto nlme::gls' control argument
 #' @param xNames names of the regressors in data
 #' @param outVar name of the outcome variable in data
-
 #' @param corMat a starting value for th correlation matrix. Taken to be a diagonal matrix if missing
 #' @param lambda The penalty value for glmnet. If missing, the optimal value of vanilla glmnet without autocorrelation component is used
+#' @param foldid An optional vector deffining the fold
+#' @param cvType A character vector defining the type of cross-validation.
+#' Either "random" or "blocked", ignored if foldid is provided
 #' @param maxIter maximum number of iterations between glmnet and gls
 #' @param tol A convergence tolerance
 #' @param verbose a boolean, should output be printed?
@@ -51,12 +53,12 @@
 #' gplsFit = gpls(data = dfTime, outVar = "a",
 #' xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 #' glsSt = corStructTime, nfolds = 5)
-gpls = function(data, glsSt, xNames, outVar, corMat, lambda,
+gpls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = c("random", "blocked"),
                 maxIter = 3e1, tol = 5e-2, verbose = FALSE,
                 optControl = lmeControl(opt = "optim", maxIter = 5e2, msVerbose = verbose,
                                         msMaxIter = 5e2, niterEM = 1e3,
                                         msMaxEval=1e3), nfolds = 10,  ...){
-   iter = 1L; conv = FALSE
+    cvType = match.arg(cvType)
    coords = {
       foo = strsplit(split = "+", as.character(attr(glsSt, "formula"))[2])[[1]] #Extract the coordinates from the formula
       foo[!foo %in% c("+", " ")]
@@ -72,6 +74,7 @@ gpls = function(data, glsSt, xNames, outVar, corMat, lambda,
     xY = as.matrix(data[,c(outVar, xNames)]) #The outcome and design matrix
     desMat = cbind(1, xY[, -1]) #The design matrix
     if(verbose) cat("Starting iterations...\n")
+    iter = 1L; conv = FALSE
     while(iter <= maxIter && !conv){
         if(verbose) cat("Iteration", iter, "\n")
         oldPred = preds #Store old predictions

@@ -8,6 +8,17 @@
 coef.gpls = function(object, ...) {
     coef(object$glmnet)
 }
+#' Extract coefficients from a cv.gpls model
+#' @param object A cv.gpls object
+#' @param which a character string, for which lambda shoudl coefficients be returned
+#' @param ... further arguments, currently ignored
+#'
+#' @method coef cv.gpls
+#' @export
+#' @return The vector of coefficients
+coef.cv.gpls = function(object, which = c("lambda.1se", "lambda.min"), ...) {
+    object$coefs[,with(object, lambdas == match.arg(which))]
+}
 #' Make predictions from a gpls model
 #' @param object A gpls object
 #' @param ... further arguments, currently ignored

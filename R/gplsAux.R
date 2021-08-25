@@ -16,8 +16,8 @@ coef.gpls = function(object, ...) {
 #' @method coef cv.gpls
 #' @export
 #' @return The vector of coefficients
-coef.cv.gpls = function(object, which = c("lambda.1se", "lambda.min"), ...) {
-    object$coefs[,with(object, lambdas == match.arg(which))]
+coef.cv.gpls = function(object, which = "lambda.1se", ...) {
+    object$coefs[,object$lambda == object[[which]]]
 }
 #' Make predictions from a gpls model
 #' @param object A gpls object

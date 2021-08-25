@@ -24,6 +24,6 @@ Divide observations into folds
 \examples{
 nfolds = 10
 data = expand.grid("x" = seq_len(10), "y" = seq_len(10))
-randomFolds = makeFolds(nfolds = nfolds, data, "random", c("x", "y))
-blockedFolds = makeFolds(nfolds = nfolds, data, "blocked", c("x", "y))
+randomFolds = makeFolds(nfolds = nfolds, data, "random", c("x", "y"))
+blockedFolds = makeFolds(nfolds = nfolds, data, "blocked", c("x", "y"))
 }

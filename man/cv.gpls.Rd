@@ -10,11 +10,13 @@ cv.gpls(
   xNames,
   outVar,
   corMat,
+  nfolds,
   foldid,
-  cvType,
+  cvType = "blocked",
   lambdas,
   transFun = "identity",
-  transFunArgs = list()
+  transFunArgs = list(),
+  ...
 )
 }
 \arguments{
@@ -28,21 +30,34 @@ cv.gpls(
 
 \item{corMat}{a starting value for th correlation matrix. Taken to be a diagonal matrix if missing}
 
+\item{nfolds}{an integer, the number of folds used in cv.glmnet to find lambda}
+
 \item{foldid}{An optional vector deffining the fold}
 
 \item{cvType}{A character vector defining the type of cross-validation.
 Either "random" or "blocked", ignored if foldid is provided}
 
 \item{lambdas}{an optional lambda sequence}
+
+\item{...}{passed onto glmnet::glmnet}
 }
 \value{
-
+A list with components
+\item{lambda}{The series of lambdas}
+\item{cvm}{The vector of mean R2's}
+\item{cvsd}{The standard error of R2 at the maximum}
+\item{cvOpt}{The R2 according to the 1 standard error rule}
+\item{coefs}{The matrix of coefficients for every lambda value}
+\item{lambda.min}{Lambda value with maximal R2}
+\item{lambda.1se}{Smallest lambda value within 1 standard error from the maximum}
+\item{foldid}{The folds}
 }
 \description{
 Peform cross-validation gpls
 }
 \examples{
-#' library(nlme)
+library(nlme)
+library(BiocParallel)
 n = 50 #Sample size
 p = 100 #Number of features
 g = 10 #Size of the grid
@@ -51,15 +66,19 @@ Grid = expand.grid("x" = seq_len(g), "y" = seq_len(g))
 # Sample points from grid without replacement
 GridSample = Grid[sample(nrow(Grid), n, replace = FALSE),]
 #Generate outcome and regressors
-a = rnorm(n)
 b = matrix(rnorm(p*n), n , p)
+a = rnorm(n, mean = b \%*\% rbinom(p, size = 1, p = 0.2)) #20\% signal
 #Compile to a matrix
 df = data.frame("a" = a, "b" = b, GridSample)
 # Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 and range 5
 corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
 #Fit the gpls model, for simplicity for a simple lambda
-gplsFitCV = cv.gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+register(MulticoreParam(3)) #Prepare multithereading
+gplsFitCV = cv.gpls(data = df, outVar = "a",
+xNames = grep(names(df), pattern = "b", value =TRUE),
 glsSt = corStruct, nfolds = 5)
 gplsFitCV$lambda.1se #Lambda for 1 standard error rule
+gplsFitCV$cvOpt #Corresponding R2
 coef(gplsFitCV)
+gplsFitCV$foldid #The folds used
 }

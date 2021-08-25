@@ -16,7 +16,7 @@ vignette: >
 
 # Introduction
 
-This vignette demonstrates the use of the _gpls_ package for high-dimensional data with spatial or temporal autocorrelation. It consists of an iterative loop around the _nlme_ \parencite{Pinheiro2021} and _glmnet_ \parencite{Friedman2010} packages.
+This vignette demonstrates the use of the _gpls_ package for high-dimensional data with spatial or temporal autocorrelation. It consists of an iterative loop around the _nlme_ \parencite{Pinheiro2021} and _glmnet_ \parencite{Friedman2010} packages. Currently, only continuous outcomes and $R^2$ as performance measure are implemented.
 
 # Installation instuction
 
@@ -50,8 +50,8 @@ Grid = expand.grid("x" = seq_len(g), "y" = seq_len(g))
 # Sample points from grid without replacement
 GridSample = Grid[sample(nrow(Grid), n, replace = FALSE),]
 #Generate outcome and regressors
-a = rnorm(n)
 b = matrix(rnorm(p*n), n , p)
+a = rnorm(n, mean = b %*% rbinom(p, size = 1, p = 0.2)) #20% signal
 #Compile to a matrix
 df = data.frame("a" = a, "b" = b, GridSample)
 ```
@@ -104,7 +104,52 @@ gplsFitTime
 
 ## Penalty parameter and cross-validation
 
-The _gpls_ package currently does not execute cross-validation. If the tuning parameter $\lambda$ is not supplied, the optimal $\lambda$ according to cross-validation with the naive _glmnet_ function is used. We encourage the user to supply his own $lambda$ values, preferably choosing it through cross validation.
+The _gpls_ package also provides cross-validation for finding the optimal $\lambda$ value. If the tuning parameter $\lambda$ is not supplied, the optimal $\lambda$ according to cross-validation with the naive _glmnet_ function is used. Hence we recommend to use the following function to use cross-validation. Multithreading is supported through the _BiocParallel_ package \parencite{Morgan2020}:
+
+```{r registerMulticores}
+library(BiocParallel)
+register(MulticoreParam(3)) #Prepare multithereading
+```
+
+The function is called similarly to _cv.glmnet_:
+
+```{r cvgpls}
+gplsFitCV = cv.gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+glsSt = corStruct, nfolds = 5)
+```
+
+By default, the 1 standard error is used to determine the optimal value of $\lambda$ \parencite{Friedman2010}:
+
+```{r 1se}
+gplsFitCV$lambda.1se #Lambda for 1 standard error rule
+gplsFitCV$cvOpt #Corresponding R2
+```
+
+Extract coefficients and foldid.
+
+```{r extractCv}
+head(coef(gplsFitCV))
+gplsFitCV$foldid #The folds used
+```
+
+By default, blocked cross-validation is used, but random cross-validation is also available (but not recommended for timecourse or spatial data). First we illustrate the different ways graphically, again using the timecourse example: 
+
+```{r illustrFolds}
+set.seed(5657)
+randomFolds = makeFolds(nfolds = 5, dfTime, "random", "t")
+blockedFolds = makeFolds(nfolds = 5, dfTime, "blocked", "t")
+plot(dfTime$t, randomFolds, xlab ="Time", ylab ="Fold")
+points(dfTime$t, blockedFolds, col = "red")
+legend("topleft", legend = c("random", "blocked"), pch = 1, col = c("black", "red"))
+```
+
+
+To perform random cross-validation
+
+```{r cvgplsTimeCourse}
+gplsFitCVtime = cv.gpls(data = dfTime, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+glsSt = corStructTime, nfolds = 5, cvType = "random")
+```
 
 \clearpage
 

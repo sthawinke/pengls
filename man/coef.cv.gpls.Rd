@@ -4,7 +4,7 @@
 \alias{coef.cv.gpls}
 \title{Extract coefficients from a cv.gpls model}
 \usage{
-\method{coef}{cv.gpls}(object, which = c("lambda.1se", "lambda.min"), ...)
+\method{coef}{cv.gpls}(object, which = "lambda.1se", ...)
 }
 \arguments{
 \item{object}{A cv.gpls object}

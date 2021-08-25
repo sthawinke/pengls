@@ -37,8 +37,8 @@
 #' # Sample points from grid without replacement
 #' GridSample = Grid[sample(nrow(Grid), n, replace = FALSE),]
 #' #Generate outcome and regressors
-#' a = rnorm(n)
 #' b = matrix(rnorm(p*n), n , p)
+#' a = rnorm(n, mean = b %*% rbinom(p, size = 1, p = 0.2)) #20% signal
 #' #Compile to a matrix
 #' df = data.frame("a" = a, "b" = b, GridSample)
 #' # Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 and range 5
@@ -81,7 +81,7 @@ gpls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = c(
         tmpDat = corMat %*% xY #Pre-multiply data by correlation matrix
         glmnetFit = glmnet(x = tmpDat[,xNames], y = tmpDat[,outVar], lambda = lambda, ...) #Fit glmnet
         preds = as.vector(desMat %*% coef(glmnetFit)) #Make predictions and center
-        margCorMat = getCorMat(data = cbind("a" = mcA - preds, data[, coords]), outVar = outVar,
+        margCorMat = getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = outVar,
                                control = optControl, glsSt = glsSt)#Find the correlation matrix
         corMat = margCorMat$corMat;Coef = margCorMat$Coef
         resSqt = sqrt(mean(((preds-oldPred))^2)) #The mean squared change in predictions

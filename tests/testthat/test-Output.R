@@ -17,9 +17,17 @@ corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugge
 #Fit the gpls model, for simplicity for a simple lambda
 gplsFit = gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
 glsSt = corStruct, nfolds = 5)
-test_that("Function returns list with correct elements", {
+test_that("gpls function returns list with correct elements", {
     expect_s3_class(gplsFit, "gpls")
     expect_output(print(gplsFit))
     expect_s4_class(coef(gplsFit), "dgCMatrix")
+}
+)
+gplsFitCv = cv.gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+               glsSt = corStruct, nfolds = 5)
+test_that("cv.gpls function returns list with correct elements", {
+    expect_s3_class(gplsFitCv, "cv.gpls")
+    expect_output(print(gplsFitCv))
+    expect_s3_class(coef(gplsFitCv), "matrix")
 }
 )

@@ -57,6 +57,10 @@ gpls = function(data, glsSt, xNames, outVar, corMat, lambda,
                                         msMaxIter = 5e2, niterEM = 1e3,
                                         msMaxEval=1e3), nfolds = 10,  ...){
    iter = 1L; conv = FALSE
+   coords = {
+      foo = strsplit(split = "+", as.character(attr(glsSt, "formula"))[2])[[1]] #Extract the coordinates from the formula
+      foo[!foo %in% c("+", " ")]
+   }
    if(missing(corMat))
         corMat = diag(nrow(data)) #Starting values for correlation matrix
    if(missing(lambda)){
@@ -74,7 +78,7 @@ gpls = function(data, glsSt, xNames, outVar, corMat, lambda,
         tmpDat = corMat %*% xY #Pre-multiply data by correlation matrix
         glmnetFit = glmnet(x = tmpDat[,xNames], y = tmpDat[,outVar], lambda = lambda, ...) #Fit glmnet
         preds = as.vector(desMat %*% coef(glmnetFit)) #Make predictions and center
-        margCorMat = getCorMat(data = cbind("a" = mcA - preds, data), outVar = outVar,
+        margCorMat = getCorMat(data = cbind("a" = mcA - preds, data[, coords]), outVar = outVar,
                                control = optControl, glsSt = glsSt)#Find the correlation matrix
         corMat = margCorMat$corMat;Coef = margCorMat$Coef
         resSqt = sqrt(mean(((preds-oldPred))^2)) #The mean squared change in predictions

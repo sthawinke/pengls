@@ -39,3 +39,14 @@ print.gpls = function(x, ...) {
     Class = class(x$glsSt)[1]
     cat("GPLS model with correlation structure:", Class, "\n and", sum(coef(x)!=0)-1, "non-zero coefficients")
 }
+#' Print a summary of a cv.gpls model
+#' @param x A cv.gpls object
+#' @param ... further arguments, currently ignored
+#' @export
+#' @return Prints output to console
+#' @method print cv.gpls
+print.cv.gpls = function(x, ...) {
+    Class = class(x$glsSt)[1]
+    cat("Cross-validated GPLS model with correlation structure:", Class, "\n and", sum(coef(x)!=0)-1, "non-zero coefficients.\n",
+        length(unique(x$foldid)), "fold cross-validation yielded an estimated R² of", x$cvOpt, ".")
+}

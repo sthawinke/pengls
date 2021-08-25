@@ -2,6 +2,8 @@
 #'
 #' @inheritParams gpls
 #' @param lambdas an optional lambda sequence
+#' @param transFun a transformation function to apply to predictions and outcome in the cross-validation
+#' @param transFunArgs Additional arguments passed onto transFun
 #'
 #' @return A list with components
 #' \item{lambda}{The series of lambdas}
@@ -12,6 +14,7 @@
 #' \item{lambda.min}{Lambda value with maximal R2}
 #' \item{lambda.1se}{Smallest lambda value within 1 standard error from the maximum}
 #' \item{foldid}{The folds}
+#' \item{glsSt}{The nlme correlation object}
 #' @export
 #' @importFrom BiocParallel bplapply
 #'
@@ -83,7 +86,7 @@ cv.gpls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid,
     outList = list("lambda" = lambdas, "cvm" = cvEsts, "cvsd" = sdMax,
                    "cvOpt" = cvEsts[seId], "coefs" = coefs,
                    "lambda.min" = lambdas[maxId], "lambda.1se" = lambdas[seId],
-                   "foldid" = foldid)
+                   "foldid" = foldid, "glsSt" = glsSt)
     class(outList) = "cv.gpls"
     return(outList)
 }

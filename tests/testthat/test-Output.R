@@ -28,6 +28,6 @@ gplsFitCv = cv.gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = 
 test_that("cv.gpls function returns list with correct elements", {
     expect_s3_class(gplsFitCv, "cv.gpls")
     expect_output(print(gplsFitCv))
-    expect_s3_class(coef(gplsFitCv), "matrix")
+    expect_type(coef(gplsFitCv), "double")
 }
 )

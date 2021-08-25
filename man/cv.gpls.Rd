@@ -39,6 +39,10 @@ Either "random" or "blocked", ignored if foldid is provided}
 
 \item{lambdas}{an optional lambda sequence}
 
+\item{transFun}{a transformation function to apply to predictions and outcome in the cross-validation}
+
+\item{transFunArgs}{Additional arguments passed onto transFun}
+
 \item{...}{passed onto glmnet::glmnet}
 }
 \value{
@@ -51,6 +55,7 @@ A list with components
 \item{lambda.min}{Lambda value with maximal R2}
 \item{lambda.1se}{Smallest lambda value within 1 standard error from the maximum}
 \item{foldid}{The folds}
+\item{glsSt}{The nlme correlation object}
 }
 \description{
 Peform cross-validation gpls

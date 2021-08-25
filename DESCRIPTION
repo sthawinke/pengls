@@ -20,5 +20,5 @@ Suggests:
     knitr,rmarkdown,testthat
 VignetteBuilder: knitr
 Depends: R (>= 4.0)
-biocViews: Transcriptomics
+biocViews: Transcriptomics, Regression, TimeCourse
 BugReports: GitHub

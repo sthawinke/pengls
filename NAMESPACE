@@ -3,6 +3,7 @@
 S3method(coef,cv.gpls)
 S3method(coef,gpls)
 S3method(predict,gpls)
+S3method(print,cv.gpls)
 S3method(print,gpls)
 export(cv.gpls)
 export(gpls)

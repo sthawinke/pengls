@@ -18,13 +18,20 @@ vignette: >
 
 This vignette demonstrates the use of the _gpls_ package for high-dimensional data with spatial or temporal autocorrelation. It consists of an iterative loop around the _nlme_ \parencite{Pinheiro2021} and _glmnet_ \parencite{Friedman2010} packages. Currently, only continuous outcomes and $R^2$ as performance measure are implemented.
 
-# Installation instuction
+# Installation instuctions
 
 The _gpls_ package is available from BioConductor, and can be installed as follows:
 
 ```{r install, eval = FALSE}
 library(BiocManager)
 install("gpls", update = FALSE)
+```
+
+Alternatively, the latest version can be downloaded directly from GitHub:
+
+```{r installGitHub, eval = FALSE}
+library(devtools)
+install_github("sthaw/gpls", update = FALSE)
 ```
 
 Once installed, it can be loaded and version info printed.
@@ -42,7 +49,7 @@ We first create a toy dataset with spatial coordinates.
 
 ```{r spatialToy}
 library(nlme)
-n = 50 #Sample size
+n = 75 #Sample size
 p = 100 #Number of features
 g = 10 #Size of the grid
 #Generate grid
@@ -51,7 +58,7 @@ Grid = expand.grid("x" = seq_len(g), "y" = seq_len(g))
 GridSample = Grid[sample(nrow(Grid), n, replace = FALSE),]
 #Generate outcome and regressors
 b = matrix(rnorm(p*n), n , p)
-a = rnorm(n, mean = b %*% rbinom(p, size = 1, p = 0.2)) #20% signal
+a = rnorm(n, mean = b %*% rbinom(p, size = 1, p = 0.25), sd = 0.1) #25% signal
 #Compile to a matrix
 df = data.frame("a" = a, "b" = b, GridSample)
 ```
@@ -81,14 +88,14 @@ gplsPred = predict(gplsFit)
 
 ## Temporal autocorrelation
 
-The method can also account for temporal autocorrelation by defining another correlation structure from the _nlme_ package, 
+The method can also account for temporal autocorrelation by defining another correlation structure from the _nlme_ package, e.g. autocorrelation structure of order 1:
 
 ```{r timeSetup}
 dfTime = data.frame("a" = a, "b" = b, "t" = seq_len(n))
 corStructTime = corAR1(form = ~ t, value = 0.5)
 ```
 
-The fitting command is similar, this time the $\lambda$ parameter is found through cross-validation of the naive glmnet. We choose $\alpha=0.5$ this time, fitting an elastic net model.
+The fitting command is similar, this time the $\lambda$ parameter is found through cross-validation of the naive glmnet (for full cross-validation , see below). We choose $\alpha=0.5$ this time, fitting an elastic net model.
 
 ```{r timeFit}
 gplsFitTime = gpls(data = dfTime, outVar = "a", verbose = TRUE,
@@ -111,12 +118,24 @@ library(BiocParallel)
 register(MulticoreParam(3)) #Prepare multithereading
 ```
 
+```{r}
+nfolds =10 #Number of cross-validation folds
+```
+
+
 The function is called similarly to _cv.glmnet_:
 
 ```{r cvgpls}
 gplsFitCV = cv.gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
-glsSt = corStruct, nfolds = 5)
+glsSt = corStruct, nfolds = nfolds)
 ```
+
+Check the result:
+
+```{r printCV}
+gplsFitCV
+```
+
 
 By default, the 1 standard error is used to determine the optimal value of $\lambda$ \parencite{Friedman2010}:
 
@@ -134,22 +153,30 @@ gplsFitCV$foldid #The folds used
 
 By default, blocked cross-validation is used, but random cross-validation is also available (but not recommended for timecourse or spatial data). First we illustrate the different ways graphically, again using the timecourse example: 
 
-```{r illustrFolds}
+```{r illustrFolds, fig.width = 10, fig.height = 7}
 set.seed(5657)
-randomFolds = makeFolds(nfolds = 5, dfTime, "random", "t")
-blockedFolds = makeFolds(nfolds = 5, dfTime, "blocked", "t")
+randomFolds = makeFolds(nfolds = nfolds, dfTime, "random", "t")
+blockedFolds = makeFolds(nfolds = nfolds, dfTime, "blocked", "t")
 plot(dfTime$t, randomFolds, xlab ="Time", ylab ="Fold")
 points(dfTime$t, blockedFolds, col = "red")
 legend("topleft", legend = c("random", "blocked"), pch = 1, col = c("black", "red"))
 ```
 
-
 To perform random cross-validation
 
 ```{r cvgplsTimeCourse}
 gplsFitCVtime = cv.gpls(data = dfTime, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
-glsSt = corStructTime, nfolds = 5, cvType = "random")
+glsSt = corStructTime, nfolds = nfolds, cvType = "random")
 ```
+
+To negate baseline differences at different timepoints, it may be useful to center or scale the outcomes in the cross validation. For instance for centering only:
+
+```{r timeCourseScale}
+gplsFitCVtimeCenter = cv.gpls(data = dfTime, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+glsSt = corStructTime, nfolds = nfolds, cvType = "blocked", transFun = function(x) x-mean(x))
+gplsFitCVtimeCenter$cvOpt #Better performance
+```
+
 
 \clearpage
 

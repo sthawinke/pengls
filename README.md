@@ -1,6 +1,4 @@
 
-# Introduction
-
 This repository demonstrates the use of the *gpls* package for
 high-dimensional data with spatial or temporal autocorrelation. It
 consists of an iterative loop around the *nlme*  and *glmnet*  packages.
@@ -35,8 +33,6 @@ cat("gpls package version", as.character(packageVersion("gpls")), "\n")
     ## gpls package version 0.1.0
 
 # Illustration
-
-## Spatial autocorrelation
 
 We first create a toy dataset with spatial coordinates.
 
@@ -93,7 +89,7 @@ gplsFit
 ```
 
     ## GPLS model with correlation structure: corGaus 
-    ##  and 24 non-zero coefficients
+    ##  and 30 non-zero coefficients
 
 ``` r
 gplsCoef = coef(gplsFit)

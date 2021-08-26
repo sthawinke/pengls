@@ -2,8 +2,6 @@
 output: github_document
 ---
 
-# Introduction
-
 This repository demonstrates the use of the _gpls_ package for high-dimensional data with spatial or temporal autocorrelation. It consists of an iterative loop around the _nlme_ \parencite{Pinheiro2021} and _glmnet_ \parencite{Friedman2010} packages. Currently, only continuous outcomes and $R^2$ as performance measure are implemented.
 
 # Installation instuctions
@@ -30,8 +28,6 @@ cat("gpls package version", as.character(packageVersion("gpls")), "\n")
 ```
 
 # Illustration
-
-## Spatial autocorrelation
 
 We first create a toy dataset with spatial coordinates.
 

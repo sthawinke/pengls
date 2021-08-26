@@ -20,7 +20,7 @@ GitHub:
 
 ``` r
 library(devtools)
-install_github("sthaw/gpls", update = FALSE)
+install_github("sthawinke/gpls")
 ```
 
 Once installed, it can be loaded and version info printed.
@@ -89,7 +89,7 @@ gplsFit
 ```
 
     ## GPLS model with correlation structure: corGaus 
-    ##  and 30 non-zero coefficients
+    ##  and 32 non-zero coefficients
 
 ``` r
 gplsCoef = coef(gplsFit)

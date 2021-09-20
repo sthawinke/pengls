@@ -1,6 +1,6 @@
-Package: gpls
+Package: pengls
 Type: Package
-Title: Fit Generalised Penalised Least Squares models
+Title: Fit Penalised Generalised Least Squares models
 Version: 0.1.0
 Authors@R: 
     c(person(given = "Stijn", family = "Hawinkel", 
@@ -8,8 +8,8 @@ Authors@R:
     role=c("cre", "aut"), comment = c(ORCID = "0000-0002-4501-5180")))
 Description: Combine generalised least squares methodology from the nlme package 
     for dealing with autocorrelation with penalised least squares methods from 
-    the glmnet package to deal with high dimensionality. This gpls packages glues 
-    them together through an iterative loop. The resulting methd is applicable to 
+    the glmnet package to deal with high dimensionality. This pengls packages glues 
+    them together through an iterative loop. The resulting method is applicable to 
     high dimensional datasets that exhibit autocorrelation, such as spatial or temporal data.
 License: GPL-2
 Encoding: UTF-8

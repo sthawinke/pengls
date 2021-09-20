@@ -21,4 +21,4 @@ Suggests:
 VignetteBuilder: knitr
 Depends: R (>= 4.0)
 biocViews: Transcriptomics, Regression, TimeCourse
-BugReports: GitHub
+BugReports: https://github.com/sthawinke/pengls

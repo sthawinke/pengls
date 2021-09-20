@@ -43,17 +43,17 @@
 #' df = data.frame("a" = a, "b" = b, GridSample)
 #' # Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 and range 5
 #' corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
-#' #Fit the gpls model, for simplicity for a simple lambda
-#' gplsFit = gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+#' #Fit the pengls model, for simplicity for a simple lambda
+#' penglsFit = pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
 #' glsSt = corStruct, nfolds = 5)
 #'
 #' ### Example 2: timecourse data
 #' dfTime = data.frame("a" = a, "b" = b, "t" = seq_len(50))
 #' corStructTime = corAR1(form = ~ t, value = 0.5)
-#' gplsFit = gpls(data = dfTime, outVar = "a",
+#' penglsFit = pengls(data = dfTime, outVar = "a",
 #' xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 #' glsSt = corStructTime, nfolds = 5)
-gpls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = c("random", "blocked"),
+pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = c("random", "blocked"),
                 maxIter = 3e1, tol = 5e-2, verbose = FALSE,
                 optControl = lmeControl(opt = "optim", maxIter = 5e2, msVerbose = verbose,
                                         msMaxIter = 5e2, niterEM = 1e3,
@@ -89,11 +89,11 @@ gpls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = c(
         iter = iter + 1L
     }
     if(!conv && verbose) {
-        warning("No convergence achieved in gpls!\n", immediate. = TRUE)
+        warning("No convergence achieved in pengls!\n", immediate. = TRUE)
     }
     out = list("glmnet" = glmnetFit, "gls" = margCorMat, "data" = data,
                "xNames" = xNames, "outVar" = outVar, "glsSt" = glsSt,
                "lambda" = lambda, "iter" = iter, "conv" = conv)
-    class(out) = "gpls"
+    class(out) = "pengls"
     return(out)
 }

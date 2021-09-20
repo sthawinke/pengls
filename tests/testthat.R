@@ -1,3 +1,3 @@
 library(testthat)
-library(gpls)
-test_check("gpls")
+library(pengls)
+test_check("pengls")

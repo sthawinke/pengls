@@ -1,6 +1,6 @@
-#' Peform cross-validation gpls
+#' Peform cross-validation pengls
 #'
-#' @inheritParams gpls
+#' @inheritParams pengls
 #' @param lambdas an optional lambda sequence
 #' @param transFun a transformation function to apply to predictions and outcome in the cross-validation
 #' @param transFunArgs Additional arguments passed onto transFun
@@ -35,16 +35,16 @@
 #' df = data.frame("a" = a, "b" = b, GridSample)
 #' # Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 and range 5
 #' corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
-#' #Fit the gpls model, for simplicity for a simple lambda
+#' #Fit the pengls model, for simplicity for a simple lambda
 #' register(MulticoreParam(3)) #Prepare multithereading
-#' gplsFitCV = cv.gpls(data = df, outVar = "a",
+#' penglsFitCV = cv.pengls(data = df, outVar = "a",
 #' xNames = grep(names(df), pattern = "b", value =TRUE),
 #' glsSt = corStruct, nfolds = 5)
-#' gplsFitCV$lambda.1se #Lambda for 1 standard error rule
-#' gplsFitCV$cvOpt #Corresponding R2
-#' coef(gplsFitCV)
-#' gplsFitCV$foldid #The folds used
-cv.gpls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid,
+#' penglsFitCV$lambda.1se #Lambda for 1 standard error rule
+#' penglsFitCV$cvOpt #Corresponding R2
+#' coef(penglsFitCV)
+#' penglsFitCV$foldid #The folds used
+cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid,
                    cvType = "blocked", lambdas, transFun = "identity",
                    transFunArgs = list(), ...){
     if(missing(foldid))
@@ -59,7 +59,7 @@ cv.gpls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid,
     fits = bplapply(uniqueFolds, function(i){
         id = foldid!=i #Leave out test fold
         lapply(lambdas, function(lam){
-                gpls(data = data[id,], glsSt = glsSt, xNames = xNames,
+                pengls(data = data[id,], glsSt = glsSt, xNames = xNames,
                      outVar = outVar, lambda = lam)
         })
     })
@@ -80,13 +80,13 @@ cv.gpls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid,
     seId = which.max(cvId)
     cvR2 = cvEsts[seId]
     fullFits = lapply(lambdas, function(lam){ #Now the full fits with all lambdas
-        gpls(data = data, glsSt = glsSt, xNames = xNames, outVar = outVar, lambda = lam)
+        pengls(data = data, glsSt = glsSt, xNames = xNames, outVar = outVar, lambda = lam)
     })
     coefs = vapply(FUN.VALUE = numeric(length(xNames)+1), fullFits, function(x) as.vector(coef(x)))
     outList = list("lambda" = lambdas, "cvm" = cvEsts, "cvsd" = sdMax,
                    "cvOpt" = cvEsts[seId], "coefs" = coefs,
                    "lambda.min" = lambdas[maxId], "lambda.1se" = lambdas[seId],
                    "foldid" = foldid, "glsSt" = glsSt)
-    class(outList) = "cv.gpls"
+    class(outList) = "cv.pengls"
     return(outList)
 }

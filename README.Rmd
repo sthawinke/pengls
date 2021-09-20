@@ -2,29 +2,29 @@
 output: github_document
 ---
 
-This repository demonstrates the use of the _gpls_ package for high-dimensional data with spatial or temporal autocorrelation. It consists of an iterative loop around the _nlme_ \parencite{Pinheiro2021} and _glmnet_ \parencite{Friedman2010} packages. Currently, only continuous outcomes and $R^2$ as performance measure are implemented.
+This repository demonstrates the use of the _pengls_ package for high-dimensional data with spatial or temporal autocorrelation. It consists of an iterative loop around the _nlme_ \parencite{Pinheiro2021} and _glmnet_ \parencite{Friedman2010} packages. Currently, only continuous outcomes and $R^2$ as performance measure are implemented.
 
 # Installation instuctions
 
-The _gpls_ package is available from BioConductor, and can be installed as follows:
+The _pengls_ package is available from BioConductor, and can be installed as follows:
 
 ```{r install, eval = FALSE}
 library(BiocManager)
-install("gpls", update = FALSE)
+install("pengls", update = FALSE)
 ```
 
 Alternatively, the latest version can be downloaded directly from GitHub:
 
 ```{r installGitHub, eval = FALSE}
 library(devtools)
-install_github("sthawinke/gpls")
+install_github("sthawinke/pengls")
 ```
 
 Once installed, it can be loaded and version info printed.
 
 ```{r loadRCMpackage}
-suppressPackageStartupMessages(library(gpls))
-cat("gpls package version", as.character(packageVersion("gpls")), "\n")
+suppressPackageStartupMessages(library(pengls))
+cat("pengls package version", as.character(packageVersion("pengls")), "\n")
 ```
 
 # Illustration
@@ -47,7 +47,7 @@ a = rnorm(n, mean = b %*% rbinom(p, size = 1, p = 0.25), sd = 0.1) #25% signal
 df = data.frame("a" = a, "b" = b, GridSample)
 ```
 
-The _gpls_ method requires prespecification of a functional form for the autocorrelation. This is done through the _corStruct_ objects defined by the _nlme_ package. We specify a correlation decaying as a Gaussian curve with distance, and with a nugget parameter. The nugget parameter is a proportion that indicates how much of the correlation structure explained by independent errors; the rest is attributed to spatial autocorrelation. The starting values are chosen as reasonable guesses; they will be overwritten in the fitting process.
+The _pengls_ method requires prespecification of a functional form for the autocorrelation. This is done through the _corStruct_ objects defined by the _nlme_ package. We specify a correlation decaying as a Gaussian curve with distance, and with a nugget parameter. The nugget parameter is a proportion that indicates how much of the correlation structure explained by independent errors; the rest is attributed to spatial autocorrelation. The starting values are chosen as reasonable guesses; they will be overwritten in the fitting process.
 
 ```{r spatialCorrelation}
 # Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 and range 5
@@ -57,15 +57,15 @@ corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugge
 Finally the model is fitted with a single outcome variable and large number of regressors, with the chosen covariance structure and for a prespecified penalty parameter $\lambda=0.2$.
 
 ```{r spatialFit}
-#Fit the gpls model, for simplicity for a simple lambda
-gplsFit = gpls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+#Fit the pengls model, for simplicity for a simple lambda
+penglsFit = pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
 glsSt = corStruct, lambda = 0.2, verbose = TRUE)
 ```
 
-Standard extraction functions like print(), coef() and predict() are defined for the new "gpls" object.
+Standard extraction functions like print(), coef() and predict() are defined for the new "pengls" object.
 
 ```{r standardExtract}
-gplsFit
-gplsCoef = coef(gplsFit)
-gplsPred = predict(gplsFit)
+penglsFit
+penglsCoef = coef(penglsFit)
+penglsPred = predict(penglsFit)
 ```

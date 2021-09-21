@@ -1,7 +1,7 @@
 Package: pengls
 Type: Package
 Title: Fit Penalised Generalised Least Squares models
-Version: 0.1.0
+Version: 0.99.1
 Authors@R: 
     c(person(given = "Stijn", family = "Hawinkel", 
     email = "stijn.hawinkel@psb-vib.ugent.be", 

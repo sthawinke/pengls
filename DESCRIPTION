@@ -4,7 +4,7 @@ Title: Fit Penalised Generalised Least Squares models
 Version: 0.99.3
 Authors@R: 
     c(person(given = "Stijn", family = "Hawinkel", 
-    email = "stijn.hawinkel@psb-vib.ugent.be", 
+    email = "stijn.hawinkel@psb.ugent.be", 
     role=c("cre", "aut"), comment = c(ORCID = "0000-0002-4501-5180")))
 Description: Combine generalised least squares methodology from the nlme package 
     for dealing with autocorrelation with penalised least squares methods from 

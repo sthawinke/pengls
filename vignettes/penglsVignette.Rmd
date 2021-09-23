@@ -177,6 +177,11 @@ glsSt = corStructTime, nfolds = nfolds, cvType = "blocked", transFun = function(
 penglsFitCVtimeCenter$cvOpt #Better performance
 ```
 
+# Session info
+
+```{r sessionInfo}
+sessionInfo()
+```
 
 \clearpage
 

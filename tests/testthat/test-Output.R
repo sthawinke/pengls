@@ -1,22 +1,22 @@
 context("Output components")
 library(nlme)
-n = 50 #Sample size
-p = 100 #Number of features
-g = 10 #Size of the grid
+n <- 50 #Sample size
+p <- 100 #Number of features
+g <- 10 #Size of the grid
 #Generate grid
-Grid = expand.grid("x" = seq_len(g), "y" = seq_len(g))
+Grid <- expand.grid("x" = seq_len(g), "y" = seq_len(g))
 # Sample points from grid without replacement
-GridSample = Grid[sample(nrow(Grid), n, replace = FALSE),]
+GridSample <- Grid[sample(nrow(Grid), n, replace = FALSE),]
 #Generate outcome and regressors
-a = rnorm(n)
-b = matrix(rnorm(p*n), n , p)
+a <- rnorm(n)
+b <- matrix(rnorm(p*n), n , p)
 #Compile to a matrix
-df = data.frame("a" = a, "b" = b, GridSample)
+df <- data.frame("a" = a, "b" = b, GridSample)
 # Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 and range 5
-corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
+corStruct <- corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
 #Fit the pengls model, for simplicity for a simple lambda
-penglsFit = pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
-glsSt = corStruct, nfolds = 5)
+penglsFit <- pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+glsSt <- corStruct, nfolds = 5)
 test_that("pengls function returns list with correct elements", {
     expect_s3_class(penglsFit, "pengls")
     expect_type(predict(penglsFit), "double")
@@ -24,7 +24,7 @@ test_that("pengls function returns list with correct elements", {
     expect_s4_class(coef(penglsFit), "dgCMatrix")
 }
 )
-penglsFitCv = cv.pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+penglsFitCv <- cv.pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
                glsSt = corStruct, nfolds = 5)
 test_that("cv.pengls function returns list with correct elements", {
     expect_s3_class(penglsFitCv, "cv.pengls")

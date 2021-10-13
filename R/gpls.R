@@ -29,28 +29,28 @@
 #' ### Example 1: spatial data
 #' # Define the dimensions of the data
 #' library(nlme)
-#' n = 50 #Sample size
-#' p = 100 #Number of features
-#' g = 10 #Size of the grid
+#' n <- 50 #Sample size
+#' p <- 100 #Number of features
+#' g <- 10 #Size of the grid
 #' #Generate grid
-#' Grid = expand.grid("x" = seq_len(g), "y" = seq_len(g))
+#' Grid <- expand.grid("x" = seq_len(g), "y" = seq_len(g))
 #' # Sample points from grid without replacement
-#' GridSample = Grid[sample(nrow(Grid), n, replace = FALSE),]
+#' GridSample <- Grid[sample(nrow(Grid), n, replace = FALSE),]
 #' #Generate outcome and regressors
-#' b = matrix(rnorm(p*n), n , p)
-#' a = rnorm(n, mean = b %*% rbinom(p, size = 1, p = 0.2)) #20% signal
+#' b <- matrix(rnorm(p*n), n , p)
+#' a <- rnorm(n, mean = b %*% rbinom(p, size = 1, p = 0.2)) #20% signal
 #' #Compile to a matrix
-#' df = data.frame("a" = a, "b" = b, GridSample)
+#' df <- data.frame("a" = a, "b" = b, GridSample)
 #' # Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 and range 5
-#' corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
+#' corStruct <- corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
 #' #Fit the pengls model, for simplicity for a simple lambda
-#' penglsFit = pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+#' penglsFit <- pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
 #' glsSt = corStruct, nfolds = 5)
 #'
 #' ### Example 2: timecourse data
-#' dfTime = data.frame("a" = a, "b" = b, "t" = seq_len(50))
-#' corStructTime = corAR1(form = ~ t, value = 0.5)
-#' penglsFit = pengls(data = dfTime, outVar = "a",
+#' dfTime <- data.frame("a" = a, "b" = b, "t" = seq_len(50))
+#' corStructTime <- corAR1(form = ~ t, value = 0.5)
+#' penglsFit <- pengls(data = dfTime, outVar = "a",
 #' xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 #' glsSt = corStructTime, nfolds = 5)
 pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = c("random", "blocked"),
@@ -58,42 +58,44 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = 
                 optControl = lmeControl(opt = "optim", maxIter = 5e2, msVerbose = verbose,
                                         msMaxIter = 5e2, niterEM = 1e3,
                                         msMaxEval=1e3), nfolds = 10,  ...){
-    cvType = match.arg(cvType)
-   coords = {
+    cvType <- match.arg(cvType)
+   coords <- {
       foo = strsplit(split = "+", as.character(attr(glsSt, "formula"))[2])[[1]] #Extract the coordinates from the formula
       foo[!foo %in% c("+", " ")]
    }
    if(missing(corMat))
-        corMat = diag(nrow(data)) #Starting values for correlation matrix
+        corMat <- diag(nrow(data)) #Starting values for correlation matrix
    if(missing(lambda)){
        if(verbose) cat("Fitting naieve model...\n")
-       naieveFit = cv.glmnet(x = as.matrix(data[,xNames]), y = data[,outVar], nfolds = nfolds, ...)
-       lambda = naieveFit$lambda.1se
+       naieveFit <- cv.glmnet(x = as.matrix(data[,xNames]), y = data[,outVar],
+                              nfolds = nfolds, ...)
+       lambda <- naieveFit$lambda.1se
    }
-    preds = mcA = data[[outVar]] - mean(data[[outVar]]) #Starting values for predictions
-    xY = as.matrix(data[,c(outVar, xNames)]) #The outcome and design matrix
-    desMat = cbind(1, xY[, -1]) #The design matrix
+    preds <- mcA <- data[[outVar]] - mean(data[[outVar]]) #Starting values for predictions
+    xY <- as.matrix(data[,c(outVar, xNames)]) #The outcome and design matrix
+    desMat <- cbind(1, xY[, -1]) #The design matrix
     if(verbose) cat("Starting iterations...\n")
     iter = 1L; conv = FALSE
     while(iter <= maxIter && !conv){
         if(verbose) cat("Iteration", iter, "\n")
-        oldPred = preds #Store old predictions
-        tmpDat = corMat %*% xY #Pre-multiply data by correlation matrix
-        glmnetFit = glmnet(x = tmpDat[,xNames], y = tmpDat[,outVar], lambda = lambda, ...) #Fit glmnet
-        preds = as.vector(desMat %*% coef(glmnetFit)) #Make predictions and center
-        margCorMat = getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = outVar,
+        oldPred <- preds #Store old predictions
+        tmpDat <- corMat %*% xY #Pre-multiply data by correlation matrix
+        glmnetFit <- glmnet(x = tmpDat[,xNames], y = tmpDat[,outVar],
+                            lambda = lambda, ...) #Fit glmnet
+        preds <- as.vector(desMat %*% coef(glmnetFit)) #Make predictions and center
+        margCorMat <- getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = outVar,
                                control = optControl, glsSt = glsSt)#Find the correlation matrix
-        corMat = margCorMat$corMat;Coef = margCorMat$Coef
-        resSqt = sqrt(mean(((preds-oldPred))^2)) #The mean squared change in predictions
-        conv = resSqt < tol #Check for convergence
-        iter = iter + 1L
+        corMat <- margCorMat$corMat;Coef = margCorMat$Coef
+        resSqt <- sqrt(mean(((preds-oldPred))^2)) #The mean squared change in predictions
+        conv <- resSqt < tol #Check for convergence
+        iter <- iter + 1L
     }
     if(!conv && verbose) {
         warning("No convergence achieved in pengls!\n", immediate. = TRUE)
     }
-    out = list("glmnet" = glmnetFit, "gls" = margCorMat, "data" = data,
+    out <- list("glmnet" = glmnetFit, "gls" = margCorMat, "data" = data,
                "xNames" = xNames, "outVar" = outVar, "glsSt" = glsSt,
                "lambda" = lambda, "iter" = iter, "conv" = conv)
-    class(out) = "pengls"
+    class(out) <- "pengls"
     return(out)
 }

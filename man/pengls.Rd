@@ -70,28 +70,28 @@ this may need to be blocked cross-validation or some other dedicated method.
 ### Example 1: spatial data
 # Define the dimensions of the data
 library(nlme)
-n = 50 #Sample size
-p = 100 #Number of features
-g = 10 #Size of the grid
+n <- 50 #Sample size
+p <- 100 #Number of features
+g <- 10 #Size of the grid
 #Generate grid
-Grid = expand.grid("x" = seq_len(g), "y" = seq_len(g))
+Grid <- expand.grid("x" = seq_len(g), "y" = seq_len(g))
 # Sample points from grid without replacement
-GridSample = Grid[sample(nrow(Grid), n, replace = FALSE),]
+GridSample <- Grid[sample(nrow(Grid), n, replace = FALSE),]
 #Generate outcome and regressors
-b = matrix(rnorm(p*n), n , p)
-a = rnorm(n, mean = b \%*\% rbinom(p, size = 1, p = 0.2)) #20\% signal
+b <- matrix(rnorm(p*n), n , p)
+a <- rnorm(n, mean = b \%*\% rbinom(p, size = 1, p = 0.2)) #20\% signal
 #Compile to a matrix
-df = data.frame("a" = a, "b" = b, GridSample)
+df <- data.frame("a" = a, "b" = b, GridSample)
 # Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 and range 5
-corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
+corStruct <- corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
 #Fit the pengls model, for simplicity for a simple lambda
-penglsFit = pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+penglsFit <- pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
 glsSt = corStruct, nfolds = 5)
 
 ### Example 2: timecourse data
-dfTime = data.frame("a" = a, "b" = b, "t" = seq_len(50))
-corStructTime = corAR1(form = ~ t, value = 0.5)
-penglsFit = pengls(data = dfTime, outVar = "a",
+dfTime <- data.frame("a" = a, "b" = b, "t" = seq_len(50))
+corStructTime <- corAR1(form = ~ t, value = 0.5)
+penglsFit <- pengls(data = dfTime, outVar = "a",
 xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 glsSt = corStructTime, nfolds = 5)
 }

@@ -36,7 +36,7 @@ predict.pengls = function(object, ...) {
 #' @return Prints output to console
 #' @method print pengls
 print.pengls = function(x, ...) {
-    Class = class(x$glsSt)[1]
+    Class <- class(x$glsSt)[1]
     cat("pengls model with correlation structure:", Class, "\n and", sum(coef(x)!=0)-1, "non-zero coefficients")
 }
 #' Print a summary of a cv.pengls model
@@ -46,7 +46,7 @@ print.pengls = function(x, ...) {
 #' @return Prints output to console
 #' @method print cv.pengls
 print.cv.pengls = function(x, ...) {
-    Class = class(x$glsSt)[1]
+    Class  <- class(x$glsSt)[1]
     cat("Cross-validated pengls model with correlation structure:", Class, "\n and", sum(coef(x)!=0)-1, "non-zero coefficients.\n",
         length(unique(x$foldid)), "fold cross-validation yielded an estimated R2 of", x$cvOpt, ".")
 }

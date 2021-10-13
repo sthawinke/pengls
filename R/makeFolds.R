@@ -10,17 +10,17 @@
 #' @export
 #'
 #' @examples
-#' nfolds = 10
-#' data = expand.grid("x" = seq_len(10), "y" = seq_len(10))
-#' randomFolds = makeFolds(nfolds = nfolds, data, "random", c("x", "y"))
-#' blockedFolds = makeFolds(nfolds = nfolds, data, "blocked", c("x", "y"))
+#' nfolds <- 10
+#' data <- expand.grid("x" = seq_len(10), "y" = seq_len(10))
+#' randomFolds <- makeFolds(nfolds = nfolds, data, "random", c("x", "y"))
+#' blockedFolds <- makeFolds(nfolds = nfolds, data, "blocked", c("x", "y"))
 makeFolds = function(nfolds, data, cvType, coords){
-    folds = switch(cvType,
+    folds <- switch(cvType,
                    "random" = sample(nfolds, nrow(data), replace = TRUE),#Also uneven fold sizes
                    "blocked" = kmeans(data[, coords], centers = nfolds)$cluster,
                    stop("Unknown CV strategy"))
     while(any(table(folds)<=1)){ #Avoid single observation folds
-        folds = makeFolds(nfolds, data, cvType)
+        folds <- makeFolds(nfolds, data, cvType)
     }
     return(folds)
 }

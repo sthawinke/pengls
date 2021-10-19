@@ -1,4 +1,6 @@
 ---
+title: Manual for the pengls pacakage
+author: Stijn Hawinkel
 output: 
   rmarkdown::html_vignette:
     toc: true

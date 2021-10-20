@@ -12,15 +12,7 @@ installed as follows:
 
 ``` r
 library(BiocManager)
-install("pengls", update = FALSE)
-```
-
-Alternatively, the latest version can be downloaded directly from
-GitHub:
-
-``` r
-library(devtools)
-install_github("sthawinke/pengls")
+install("pengls")
 ```
 
 Once installed, it can be loaded and version info printed.
@@ -30,7 +22,7 @@ suppressPackageStartupMessages(library(pengls))
 cat("pengls package version", as.character(packageVersion("pengls")), "\n")
 ```
 
-    ## pengls package version 0.1.0
+    ## pengls package version 0.99.5
 
 # Illustration
 
@@ -38,18 +30,18 @@ We first create a toy dataset with spatial coordinates.
 
 ``` r
 library(nlme)
-n = 75 #Sample size
-p = 100 #Number of features
-g = 10 #Size of the grid
+n <- 75 #Sample size
+p <- 100 #Number of features
+g <- 10 #Size of the grid
 #Generate grid
-Grid = expand.grid("x" = seq_len(g), "y" = seq_len(g))
+Grid <- expand.grid("x" = seq_len(g), "y" = seq_len(g))
 # Sample points from grid without replacement
-GridSample = Grid[sample(nrow(Grid), n, replace = FALSE),]
+GridSample <- Grid[sample(nrow(Grid), n, replace = FALSE),]
 #Generate outcome and regressors
-b = matrix(rnorm(p*n), n , p)
-a = rnorm(n, mean = b %*% rbinom(p, size = 1, p = 0.25), sd = 0.1) #25% signal
+b <- matrix(rnorm(p*n), n , p)
+a <- rnorm(n, mean = b %*% rbinom(p, size = 1, p = 0.25), sd = 0.1) #25% signal
 #Compile to a matrix
-df = data.frame("a" = a, "b" = b, GridSample)
+df <- data.frame("a" = a, "b" = b, GridSample)
 ```
 
 The *pengls* method requires prespecification of a functional form for
@@ -63,7 +55,7 @@ guesses; they will be overwritten in the fitting process.
 
 ``` r
 # Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 and range 5
-corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
+corStruct <- corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
 ```
 
 Finally the model is fitted with a single outcome variable and large
@@ -72,8 +64,8 @@ prespecified penalty parameter \(\lambda=0.2\).
 
 ``` r
 #Fit the pengls model, for simplicity for a simple lambda
-penglsFit = pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
-glsSt = corStruct, lambda = 0.2, verbose = TRUE)
+penglsFit <- pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
+glsSt <- corStruct, lambda = 0.2, verbose = TRUE)
 ```
 
     ## Starting iterations...
@@ -89,9 +81,9 @@ penglsFit
 ```
 
     ## pengls model with correlation structure: corGaus 
-    ##  and 43 non-zero coefficients
+    ##  and 46 non-zero coefficients
 
 ``` r
-penglsCoef = coef(penglsFit)
-penglsPred = predict(penglsFit)
+penglsCoef <- coef(penglsFit)
+penglsPred <- predict(penglsFit)
 ```

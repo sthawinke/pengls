@@ -147,7 +147,7 @@ penglsFitCV$foldid #The folds used
 
 By default, blocked cross-validation is used, but random cross-validation is also available (but not recommended for timecourse or spatial data). First we illustrate the different ways graphically, again using the timecourse example: 
 
-```{r illustrFolds, fig.width = 10, fig.height = 7}
+```{r illustrFolds, fig.width = 8, fig.height = 7}
 set.seed(5657)
 randomFolds <- makeFolds(nfolds = nfolds, dfTime, "random", "t")
 blockedFolds <- makeFolds(nfolds = nfolds, dfTime, "blocked", "t")

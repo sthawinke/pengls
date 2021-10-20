@@ -10,14 +10,7 @@ The _pengls_ package is available from BioConductor, and can be installed as fol
 
 ```{r install, eval = FALSE}
 library(BiocManager)
-install("pengls", update = FALSE)
-```
-
-Alternatively, the latest version can be downloaded directly from GitHub:
-
-```{r installGitHub, eval = FALSE}
-library(devtools)
-install_github("sthawinke/pengls")
+install("pengls")
 ```
 
 Once installed, it can be loaded and version info printed.

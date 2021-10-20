@@ -1,5 +1,5 @@
 ---
-title: Manual for the pengls pacakage
+title: Vignette of the pengls package
 author: Stijn Hawinkel
 output: 
   rmarkdown::html_vignette:
@@ -7,7 +7,7 @@ output:
     number_sections: true
     keep_md: true
 vignette: >
-  %\VignetteIndexEntry{Manual for the pengls pacakage}
+  %\VignetteIndexEntry{Vignette of the pengls package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -25,14 +25,7 @@ The _pengls_ package is available from BioConductor, and can be installed as fol
 
 ```{r install, eval = FALSE}
 library(BiocManager)
-install("pengls", update = FALSE)
-```
-
-Alternatively, the latest version can be downloaded directly from GitHub:
-
-```{r installGitHub, eval = FALSE}
-library(devtools)
-install_github("sthaw/pengls", update = FALSE)
+install("pengls")
 ```
 
 Once installed, it can be loaded and version info printed.
@@ -112,7 +105,7 @@ penglsFitTime
 
 ## Penalty parameter and cross-validation
 
-The _pengls_ package also provides cross-validation for finding the optimal $\lambda$ value. If the tuning parameter $\lambda$ is not supplied, the optimal $\lambda$ according to cross-validation with the naive _glmnet_ function is used. Hence we recommend to use the following function to use cross-validation. Multithreading is supported through the _BiocParallel_ package \parencite{Morgan2020}:
+The _pengls_ package also provides cross-validation for finding the optimal $\lambda$ value. If the tuning parameter $\lambda$ is not supplied, the optimal $\lambda$ according to cross-validation with the naive _glmnet_ function (the one that ignores dependence) is used. Hence we recommend to use the following function to use cross-validation. Multithreading is supported through the _BiocParallel_ package \parencite{Morgan2020}:
 
 ```{r registerMulticores}
 library(BiocParallel)
@@ -145,7 +138,7 @@ penglsFitCV$lambda.1se #Lambda for 1 standard error rule
 penglsFitCV$cvOpt #Corresponding R2
 ```
 
-Extract coefficients and foldid.
+Extract coefficients and fold IDs.
 
 ```{r extractCv}
 head(coef(penglsFitCV))

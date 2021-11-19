@@ -84,7 +84,7 @@ penglsPred <- predict(penglsFit)
 The method can also account for temporal autocorrelation by defining another correlation structure from the _nlme_ package, e.g. autocorrelation structure of order 1:
 
 ```{r timeSetup}
-n <- 50 #Sample size
+n <- 100 #Sample size
 p <- 10 #Number of features
 #Generate outcome and regressors
 b <- matrix(rnorm(p*n), n , p)

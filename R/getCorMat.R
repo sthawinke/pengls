@@ -19,6 +19,6 @@ getCorMat = function(data, glsSt, Coef = c(coef(glsSt)), control, outVar){
     optRes <- optim(Coef, function(glsPars) -logLik(glsSt, glsPars), method = control$optimMethod,
           control = list(maxit = control$msMaxIter, reltol = control$msTol)) #Find the parameters
     coef(glsSt) <- optRes$par
-    corMat <- corMatrix(glsSt, corr = FALSE) #The inverse square root glsSt matrix, see ?corMat
+    corMat <- corMatrix(glsSt$corStruct, corr = FALSE) #The inverse square root glsSt matrix, see ?corMat
     return(list("corMat" = corMat, "Coef" = optRes$par))
 }

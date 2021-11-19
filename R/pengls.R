@@ -63,6 +63,7 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = 
       foo = strsplit(split = "+", as.character(attr(glsSt, "formula"))[2])[[1]] #Extract the coordinates from the formula
       foo[!foo %in% c("+", " ")]
    }
+   glsSt = glsStruct(glsSt) #Initialize correlation object
    if(missing(corMat))
         corMat <- diag(nrow(data)) #Starting values for correlation matrix
    if(missing(lambda)){
@@ -85,7 +86,7 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = 
         preds <- as.vector(desMat %*% coef(glmnetFit)) #Make predictions and center
         margCorMat <- getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = outVar,
                                control = optControl, glsSt = glsSt)#Find the correlation matrix
-        corMat <- margCorMat$corMat;Coef = margCorMat$Coef
+        corMat <- margCorMat$corMat;Coef = coef(glsSt) = margCorMat$Coef
         resSqt <- sqrt(mean(((preds-oldPred))^2)) #The mean squared change in predictions
         conv <- resSqt < tol #Check for convergence
         iter <- iter + 1L

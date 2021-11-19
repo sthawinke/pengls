@@ -21,8 +21,8 @@
 #' @examples
 #' library(nlme)
 #' library(BiocParallel)
-#' n <- 50 #Sample size
-#' p <- 100 #Number of features
+#' n <- 20 #Sample size
+#' p <- 50 #Number of features
 #' g <- 10 #Size of the grid
 #' #Generate grid
 #' Grid <- expand.grid("x" = seq_len(g), "y" = seq_len(g))
@@ -78,8 +78,9 @@ cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid,
     sdMax <- sqrt(mean((R2sCv[maxId,]-cvEsts[maxId])^2)/(nrow(R2sCv)-1))
     cvId <- cvEsts > (cvEsts[maxId] - sdMax)
     seId <- which.max(cvId)
+
     cvR2 <- cvEsts[seId]
-    fullFits <- lapply(lambdas, function(lam){ #Now the full fits with all lambdas
+    fullFits <- bplapply(lambdas, function(lam){ #Now the full fits with all lambdas
         pengls(data = data, glsSt = glsSt, xNames = xNames, outVar = outVar, lambda = lam)
     })
     coefs <- vapply(FUN.VALUE = numeric(length(xNames)+1), fullFits, function(x) as.vector(coef(x)))

@@ -84,9 +84,8 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = 
         glmnetFit <- glmnet(x = tmpDat[,xNames], y = tmpDat[,outVar],
                             lambda = lambda, ...) #Fit glmnet
         preds <- as.vector(desMat %*% coef(glmnetFit)) #Make predictions and center
-        margCorMat <- getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = outVar,
-                               control = optControl, glsSt = glsSt)#Find the correlation matrix
-        corMat <- margCorMat$corMat;Coef = coef(glsSt) = margCorMat$Coef
+        margCorMat <- getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = outVar, control = optControl, glsSt = glsSt)#Find the correlation matrix
+        corMat <- margCorMat$corMat;Coef = margCorMat$Coef
         resSqt <- sqrt(mean(((preds-oldPred))^2)) #The mean squared change in predictions
         conv <- resSqt < tol #Check for convergence
         iter <- iter + 1L

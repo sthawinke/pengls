@@ -43,9 +43,9 @@ We first create a toy dataset with spatial coordinates.
 
 ```{r spatialToy}
 library(nlme)
-n <- 75 #Sample size
-p <- 100 #Number of features
-g <- 10 #Size of the grid
+n <- 25 #Sample size
+p <- 50 #Number of features
+g <- 15 #Size of the grid
 #Generate grid
 Grid <- expand.grid("x" = seq_len(g), "y" = seq_len(g))
 # Sample points from grid without replacement
@@ -68,8 +68,7 @@ Finally the model is fitted with a single outcome variable and large number of r
 
 ```{r spatialFit}
 #Fit the pengls model, for simplicity for a simple lambda
-penglsFit <- pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
-glsSt = corStruct, lambda = 0.2, verbose = TRUE)
+penglsFit <- pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE), glsSt = corStruct, lambda = 0.2, verbose = TRUE)
 ```
 
 Standard extraction functions like print(), coef() and predict() are defined for the new "pengls" object.
@@ -85,6 +84,12 @@ penglsPred <- predict(penglsFit)
 The method can also account for temporal autocorrelation by defining another correlation structure from the _nlme_ package, e.g. autocorrelation structure of order 1:
 
 ```{r timeSetup}
+n <- 50 #Sample size
+p <- 10 #Number of features
+#Generate outcome and regressors
+b <- matrix(rnorm(p*n), n , p)
+a <- rnorm(n, mean = b %*% rbinom(p, size = 1, p = 0.25), sd = 0.1) #25% signal
+#Compile to a matrix
 dfTime <- data.frame("a" = a, "b" = b, "t" = seq_len(n))
 corStructTime <- corAR1(form = ~ t, value = 0.5)
 ```
@@ -112,16 +117,15 @@ library(BiocParallel)
 register(MulticoreParam(3)) #Prepare multithereading
 ```
 
-```{r}
-nfolds =10 #Number of cross-validation folds
+```{r, nfolds}
+nfolds <- 3 #Number of cross-validation folds
 ```
 
 
 The function is called similarly to _cv.glmnet_:
 
 ```{r cvpengls}
-penglsFitCV <- cv.pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
-glsSt <- corStruct, nfolds = nfolds)
+penglsFitCV <- cv.pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE), glsSt = corStruct, nfolds = nfolds)
 ```
 
 Check the result:
@@ -159,15 +163,13 @@ legend("topleft", legend = c("random", "blocked"), pch = 1, col = c("black", "re
 To perform random cross-validation
 
 ```{r cvpenglsTimeCourse}
-penglsFitCVtime <- cv.pengls(data = dfTime, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
-glsSt <- corStructTime, nfolds = nfolds, cvType = "random")
+penglsFitCVtime <- cv.pengls(data = dfTime, outVar = "a", xNames = grep(names(dfTime), pattern = "b", value =TRUE), glsSt = corStructTime, nfolds = nfolds, cvType = "random")
 ```
 
 To negate baseline differences at different timepoints, it may be useful to center or scale the outcomes in the cross validation. For instance for centering only:
 
 ```{r timeCourseScale}
-penglsFitCVtimeCenter <- cv.pengls(data = dfTime, outVar = "a", xNames = grep(names(df), pattern = "b", value =TRUE),
-glsSt <- corStructTime, nfolds = nfolds, cvType = "blocked", transFun = function(x) x-mean(x))
+penglsFitCVtimeCenter <- cv.pengls(data = dfTime, outVar = "a", xNames = grep(names(dfTime), pattern = "b", value =TRUE), glsSt = corStructTime, nfolds = nfolds, cvType = "blocked", transFun = function(x) x-mean(x))
 penglsFitCVtimeCenter$cvOpt #Better performance
 ```
 

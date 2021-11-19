@@ -63,8 +63,8 @@ Peform cross-validation pengls
 \examples{
 library(nlme)
 library(BiocParallel)
-n <- 50 #Sample size
-p <- 100 #Number of features
+n <- 20 #Sample size
+p <- 50 #Number of features
 g <- 10 #Size of the grid
 #Generate grid
 Grid <- expand.grid("x" = seq_len(g), "y" = seq_len(g))

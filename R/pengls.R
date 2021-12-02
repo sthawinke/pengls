@@ -5,11 +5,9 @@
 #' @param optControl control arguments, passed onto nlme::gls' control argument
 #' @param xNames names of the regressors in data
 #' @param outVar name of the outcome variable in data
-#' @param corMat a starting value for th correlation matrix. Taken to be a diagonal matrix if missing
+#' @param corMat a starting value for the correlation matrix. Taken to be a diagonal matrix if missing
 #' @param lambda The penalty value for glmnet. If missing, the optimal value of vanilla glmnet without autocorrelation component is used
 #' @param foldid An optional vector deffining the fold
-#' @param cvType A character vector defining the type of cross-validation.
-#' Either "random" or "blocked", ignored if foldid is provided
 #' @param maxIter maximum number of iterations between glmnet and gls
 #' @param tol A convergence tolerance
 #' @param verbose a boolean, should output be printed?
@@ -21,10 +19,6 @@
 #' @import glmnet nlme
 #' @importFrom stats coef
 #' @export
-#' @details This function does not provide cross-validation, but rather fits the model
-#' for the lambda penalty value provided, or else the optimal lambda value of the vanilla glmnet.
-#' Cross-validation needs to be implemented by the user; since the data exhibits autocorrelation
-#' this may need to be blocked cross-validation or some other dedicated method.
 #' @examples
 #' ### Example 1: spatial data
 #' # Define the dimensions of the data
@@ -53,12 +47,11 @@
 #' penglsFit <- pengls(data = dfTime, outVar = "a",
 #' xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 #' glsSt = corStructTime, nfolds = 5)
-pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = c("random", "blocked"),
+pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
                 maxIter = 3e1, tol = 5e-2, verbose = FALSE,
                 optControl = lmeControl(opt = "optim", maxIter = 5e2, msVerbose = verbose,
                                         msMaxIter = 5e2, niterEM = 1e3,
                                         msMaxEval=1e3), nfolds = 10,  ...){
-    cvType <- match.arg(cvType)
    coords <- {
       foo = strsplit(split = "+", as.character(attr(glsSt, "formula"))[2])[[1]] #Extract the coordinates from the formula
       foo[!foo %in% c("+", " ")]
@@ -84,7 +77,7 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, cvType = 
         glmnetFit <- glmnet(x = tmpDat[,xNames], y = tmpDat[,outVar],
                             lambda = lambda, ...) #Fit glmnet
         preds <- as.vector(desMat %*% coef(glmnetFit)) #Make predictions and center
-        margCorMat <- getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = outVar, control = optControl, glsSt = glsSt)#Find the correlation matrix
+        margCorMat <- getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = "a", control = optControl, glsSt = glsSt)#Find the correlation matrix
         corMat <- margCorMat$corMat;Coef = margCorMat$Coef
         resSqt <- sqrt(mean(((preds-oldPred))^2)) #The mean squared change in predictions
         conv <- resSqt < tol #Check for convergence

@@ -4,6 +4,8 @@
 #' @param lambdas an optional lambda sequence
 #' @param transFun a transformation function to apply to predictions and outcome in the cross-validation
 #' @param transFunArgs Additional arguments passed onto transFun
+#' @param cvType A character vector defining the type of cross-validation.
+#' Either "random" or "blocked", ignored if foldid is provided
 #'
 #' @return A list with components
 #' \item{lambda}{The series of lambdas}

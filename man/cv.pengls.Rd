@@ -28,7 +28,7 @@ cv.pengls(
 
 \item{outVar}{name of the outcome variable in data}
 
-\item{corMat}{a starting value for th correlation matrix. Taken to be a diagonal matrix if missing}
+\item{corMat}{a starting value for the correlation matrix. Taken to be a diagonal matrix if missing}
 
 \item{nfolds}{an integer, the number of folds used in cv.glmnet to find lambda}
 

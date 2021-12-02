@@ -12,7 +12,6 @@ pengls(
   corMat,
   lambda,
   foldid,
-  cvType = c("random", "blocked"),
   maxIter = 30,
   tol = 0.05,
   verbose = FALSE,
@@ -31,14 +30,11 @@ pengls(
 
 \item{outVar}{name of the outcome variable in data}
 
-\item{corMat}{a starting value for th correlation matrix. Taken to be a diagonal matrix if missing}
+\item{corMat}{a starting value for the correlation matrix. Taken to be a diagonal matrix if missing}
 
 \item{lambda}{The penalty value for glmnet. If missing, the optimal value of vanilla glmnet without autocorrelation component is used}
 
 \item{foldid}{An optional vector deffining the fold}
-
-\item{cvType}{A character vector defining the type of cross-validation.
-Either "random" or "blocked", ignored if foldid is provided}
 
 \item{maxIter}{maximum number of iterations between glmnet and gls}
 
@@ -59,12 +55,6 @@ A list with components
 }
 \description{
 Iterative estimation of penalised generalised least squares
-}
-\details{
-This function does not provide cross-validation, but rather fits the model
-for the lambda penalty value provided, or else the optimal lambda value of the vanilla glmnet.
-Cross-validation needs to be implemented by the user; since the data exhibits autocorrelation
-this may need to be blocked cross-validation or some other dedicated method.
 }
 \examples{
 ### Example 1: spatial data

@@ -12,6 +12,8 @@ cv.pengls(
   corMat,
   nfolds,
   foldid,
+  scale = TRUE,
+  center = TRUE,
   cvType = "blocked",
   lambdas,
   transFun = "identity",
@@ -33,6 +35,10 @@ cv.pengls(
 \item{nfolds}{an integer, the number of folds used in cv.glmnet to find lambda}
 
 \item{foldid}{An optional vector deffining the fold}
+
+\item{scale}{booleans, should regressors be scaled to zero mean and variance 1? Defaults to TRUE}
+
+\item{center}{booleans, should regressors be scaled to zero mean and variance 1? Defaults to TRUE}
 
 \item{cvType}{A character vector defining the type of cross-validation.
 Either "random" or "blocked", ignored if foldid is provided}

@@ -46,11 +46,12 @@
 #' penglsFitCV$cvOpt #Corresponding R2
 #' coef(penglsFitCV)
 #' penglsFitCV$foldid #The folds used
-cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid,
+cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid, scale = TRUE, center = TRUE,
                    cvType = "blocked", lambdas, transFun = "identity",
                    transFunArgs = list(), ...){
     if(missing(foldid))
         foldid <- makeFolds(nfolds, data, cvType)
+    data[, xNames] = scale(data[, xNames], scale = scale, center = center) #Center and scale
     if(missing(lambdas)){
         naieveFit <- cv.glmnet(x = as.matrix(data[,xNames]),
                               y = data[,outVar], foldid = foldid, ...)

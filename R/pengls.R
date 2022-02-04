@@ -11,6 +11,7 @@
 #' @param maxIter maximum number of iterations between glmnet and gls
 #' @param tol A convergence tolerance
 #' @param verbose a boolean, should output be printed?
+#' @param scale,center booleans, should regressors be scaled to zero mean and variance 1? Defaults to TRUE
 #' @param nfolds an integer, the number of folds used in cv.glmnet to find lambda
 #' @param ... passed onto glmnet::glmnet
 #' @return A list with components
@@ -18,6 +19,7 @@
 #' \item{Coef}{The coefficients of the correlation object}
 #' @import glmnet nlme
 #' @importFrom stats coef
+#' @seealso cv.pengls
 #' @export
 #' @examples
 #' ### Example 1: spatial data
@@ -48,7 +50,7 @@
 #' xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 #' glsSt = corStructTime, nfolds = 5)
 pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
-                maxIter = 3e1, tol = 5e-2, verbose = FALSE,
+                maxIter = 3e1, tol = 5e-2, verbose = FALSE, scale = TRUE, center = TRUE,
                 optControl = lmeControl(opt = "optim", maxIter = 5e2, msVerbose = verbose,
                                         msMaxIter = 5e2, niterEM = 1e3,
                                         msMaxEval=1e3), nfolds = 10,  ...){
@@ -57,14 +59,16 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
       foo[!foo %in% c("+", " ")]
    }
    glsSt = glsStruct(glsSt) #Initialize correlation object
-   if(missing(corMat))
+   if(missing(corMat) )
         corMat <- diag(nrow(data)) #Starting values for correlation matrix
+   data[, xNames] = scale(data[, xNames], scale = scale, center = center) #Center and scale
    if(missing(lambda)){
        if(verbose) cat("Fitting naieve model...\n")
        naieveFit <- cv.glmnet(x = as.matrix(data[,xNames]), y = data[,outVar],
                               nfolds = nfolds, ...)
        lambda <- naieveFit$lambda.1se
    }
+
     preds <- mcA <- data[[outVar]] - mean(data[[outVar]]) #Starting values for predictions
     xY <- as.matrix(data[,c(outVar, xNames)]) #The outcome and design matrix
     desMat <- cbind(1, xY[, -1]) #The design matrix

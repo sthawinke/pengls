@@ -15,6 +15,8 @@ pengls(
   maxIter = 30,
   tol = 0.05,
   verbose = FALSE,
+  scale = TRUE,
+  center = TRUE,
   optControl = lmeControl(opt = "optim", maxIter = 500, msVerbose = verbose, msMaxIter
     = 500, niterEM = 1000, msMaxEval = 1000),
   nfolds = 10,
@@ -41,6 +43,8 @@ pengls(
 \item{tol}{A convergence tolerance}
 
 \item{verbose}{a boolean, should output be printed?}
+
+\item{scale, center}{booleans, should regressors be scaled to zero mean and variance 1? Defaults to TRUE}
 
 \item{optControl}{control arguments, passed onto nlme::gls' control argument}
 
@@ -84,4 +88,7 @@ corStructTime <- corAR1(form = ~ t, value = 0.5)
 penglsFit <- pengls(data = dfTime, outVar = "a",
 xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 glsSt = corStructTime, nfolds = 5)
+}
+\seealso{
+cv.pengls
 }

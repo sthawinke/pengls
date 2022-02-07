@@ -6,7 +6,7 @@
 #' @export
 #' @return The vector of coefficients
 coef.pengls = function(object, ...) {
-    coef(object$glmnet)
+    coef(object$glmnet)[-1]
 }
 #' Extract coefficients from a cv.pengls model
 #' @param object A cv.pengls object
@@ -17,7 +17,7 @@ coef.pengls = function(object, ...) {
 #' @export
 #' @return The vector of coefficients
 coef.cv.pengls = function(object, which = "lambda.1se", ...) {
-    object$coefs[,object$lambda == object[[which]]]
+    object$coefs[,object$lambda == object[[which]]][-1]
 }
 #' Make predictions from a pengls model
 #' @param object A pengls object
@@ -27,7 +27,7 @@ coef.cv.pengls = function(object, which = "lambda.1se", ...) {
 #' @method predict pengls
 #' @return A vector with predicted values
 predict.pengls = function(object, ...) {
-    predict(object$glmnet, newx = as.matrix(object$data[, object$xNames]))
+    predict(object$glmnet, newx = cbind(1,as.matrix(object$data[, object$xNames])))
 }
 #' Print a summary of a pengls model
 #' @param x A pengls object

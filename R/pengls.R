@@ -50,7 +50,7 @@
 #' xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 #' glsSt = corStructTime, nfolds = 5)
 pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
-                maxIter = 3e1, tol = 5e-2, verbose = FALSE, scale = TRUE, center = TRUE,
+                maxIter = 3e1, tol = 5e-2, verbose = FALSE, scale = FALSE, center = FALSE,
                 optControl = lmeControl(opt = "optim", maxIter = 5e2, msVerbose = verbose,
                                         msMaxIter = 5e2, niterEM = 1e3,
                                         msMaxEval=1e3), nfolds = 10,  ...){
@@ -58,7 +58,7 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
       foo = strsplit(split = "+", as.character(attr(glsSt, "formula"))[2])[[1]] #Extract the coordinates from the formula
       foo[!foo %in% c("+", " ")]
    }
-   glsSt = glsStruct(glsSt) #Initialize correlation object
+   glsSt0 = glsStruct(glsSt) #Initialize correlation object
    if(missing(corMat) )
         corMat <- diag(nrow(data)) #Starting values for correlation matrix
    data[, xNames] = scale(data[, xNames], scale = scale, center = center) #Center and scale
@@ -68,7 +68,6 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
                               nfolds = nfolds, ...)
        lambda <- naieveFit$lambda.1se
    }
-
     preds <- mcA <- data[[outVar]] - mean(data[[outVar]]) #Starting values for predictions
     xY = cbind("Intercept" = 1, as.matrix(data[, c(outVar, xNames)]))
     if(verbose) cat("Starting iterations...\n")
@@ -80,8 +79,8 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
         glmnetFit <- glmnet(x = tmpDat[,c("Intercept", xNames)], y = tmpDat[,outVar],
                             intercept = FALSE, penalty.factor = c(0, rep(1, length(xNames))),
                             lambda = lambda, ...) #Fit glmnet, do not shrink intercept
-        preds <- as.vector(xY[, -2] %*% coef(glmnetFit)) #Make predictions and center
-        margCorMat <- getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = "a", control = optControl, glsSt = glsSt)#Find the correlation matrix
+        preds <- as.vector(xY[, -2] %*% coef(glmnetFit)[-1]) #Make predictions
+        margCorMat <- getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = "a", control = optControl, glsSt = glsSt0)#Find the correlation matrix
         corMat <- margCorMat$corMat;Coef = margCorMat$Coef
         resSqt <- sqrt(mean(((preds-oldPred))^2)) #The mean squared change in predictions
         conv <- resSqt < tol #Check for convergence

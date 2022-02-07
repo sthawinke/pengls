@@ -15,8 +15,8 @@ pengls(
   maxIter = 30,
   tol = 0.05,
   verbose = FALSE,
-  scale = TRUE,
-  center = TRUE,
+  scale = FALSE,
+  center = FALSE,
   optControl = lmeControl(opt = "optim", maxIter = 500, msVerbose = verbose, msMaxIter
     = 500, niterEM = 1000, msMaxEval = 1000),
   nfolds = 10,

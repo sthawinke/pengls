@@ -5,3 +5,7 @@ output: github_document
 # 0.1.0
 
 First release
+
+# 1.1.1
+
+ - Also apply spatial correction to intercept 

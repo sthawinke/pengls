@@ -70,17 +70,17 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
    }
 
     preds <- mcA <- data[[outVar]] - mean(data[[outVar]]) #Starting values for predictions
-    xY <- as.matrix(data[,c(outVar, xNames)]) #The outcome and design matrix
-    desMat <- cbind(1, xY[, -1]) #The design matrix
+    xY = cbind("Intercept" = 1, as.matrix(data[, c(outVar, xNames)]))
     if(verbose) cat("Starting iterations...\n")
     iter = 1L; conv = FALSE
     while(iter <= maxIter && !conv){
         if(verbose) cat("Iteration", iter, "\n")
         oldPred <- preds #Store old predictions
         tmpDat <- corMat %*% xY #Pre-multiply data by correlation matrix
-        glmnetFit <- glmnet(x = tmpDat[,xNames], y = tmpDat[,outVar],
-                            lambda = lambda, ...) #Fit glmnet
-        preds <- as.vector(desMat %*% coef(glmnetFit)) #Make predictions and center
+        glmnetFit <- glmnet(x = tmpDat[,c("Intercept", xNames)], y = tmpDat[,outVar],
+                            intercept = FALSE, penalty.factor = c(0, rep(1, length(xNames))),
+                            lambda = lambda, ...) #Fit glmnet, do not shrink intercept
+        preds <- as.vector(xY[, -2] %*% coef(glmnetFit)) #Make predictions and center
         margCorMat <- getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = "a", control = optControl, glsSt = glsSt)#Find the correlation matrix
         corMat <- margCorMat$corMat;Coef = margCorMat$Coef
         resSqt <- sqrt(mean(((preds-oldPred))^2)) #The mean squared change in predictions

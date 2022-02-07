@@ -21,7 +21,7 @@ test_that("pengls function returns list with correct elements", {
     expect_s3_class(penglsFit, "pengls")
     expect_type(predict(penglsFit), "double")
     expect_output(print(penglsFit))
-    expect_s4_class(coef(penglsFit), "dgCMatrix")
+    expect_type(coef(penglsFit), "vector")
 }
 )
 penglsFitCv <- cv.pengls(data = df, outVar = "out", xNames = grep(names(df), pattern = "b", value =TRUE),

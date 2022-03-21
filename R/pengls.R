@@ -13,6 +13,7 @@
 #' @param verbose a boolean, should output be printed?
 #' @param scale,center booleans, should regressors be scaled to zero mean and variance 1? Defaults to TRUE
 #' @param nfolds an integer, the number of folds used in cv.glmnet to find lambda
+#' @param penalty.factor passed onto glmnet:glmnet. The first entry is zero by default for the intercept, which is not shrunk
 #' @param ... passed onto glmnet::glmnet
 #' @return A list with components
 #' \item{corMat}{The square root of the inverse correlation matrix}
@@ -53,7 +54,7 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
                 maxIter = 3e1, tol = 5e-2, verbose = FALSE, scale = FALSE, center = FALSE,
                 optControl = lmeControl(opt = "optim", maxIter = 5e2, msVerbose = verbose,
                                         msMaxIter = 5e2, niterEM = 1e3,
-                                        msMaxEval=1e3), nfolds = 10,  ...){
+                                        msMaxEval=1e3), nfolds = 10, penalty.factor = c(0, rep(1, length(xNames))), ...){
    coords <- {
       foo = strsplit(split = "+", as.character(attr(glsSt, "formula"))[2])[[1]] #Extract the coordinates from the formula
       foo[!foo %in% c("+", " ")]
@@ -65,7 +66,7 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
    if(missing(lambda)){
        if(verbose) cat("Fitting naieve model...\n")
        naieveFit <- cv.glmnet(x = as.matrix(data[,xNames]), y = data[,outVar],
-                              nfolds = nfolds, ...)
+                              nfolds = nfolds, penalty.factor = penalty.factor[-1], ...) #Exclude intercept heres
        lambda <- naieveFit$lambda.1se
    }
     preds <- mcA <- data[[outVar]] - mean(data[[outVar]]) #Starting values for predictions
@@ -77,7 +78,7 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
         oldPred <- preds #Store old predictions
         tmpDat <- corMat %*% xY #Pre-multiply data by correlation matrix
         glmnetFit <- glmnet(x = tmpDat[,c("Intercept", xNames)], y = tmpDat[,outVar],
-                            intercept = FALSE, penalty.factor = c(0, rep(1, length(xNames))),
+                            intercept = FALSE, penalty.factor = penalty.factor,
                             lambda = lambda, ...) #Fit glmnet, do not shrink intercept
         preds <- as.vector(xY[, -2] %*% coef(glmnetFit)[-1]) #Make predictions
         margCorMat <- getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = "a", control = optControl, glsSt = glsSt0)#Find the correlation matrix

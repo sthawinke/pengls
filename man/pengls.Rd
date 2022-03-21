@@ -20,6 +20,7 @@ pengls(
   optControl = lmeControl(opt = "optim", maxIter = 500, msVerbose = verbose, msMaxIter
     = 500, niterEM = 1000, msMaxEval = 1000),
   nfolds = 10,
+  penalty.factor = c(0, rep(1, length(xNames))),
   ...
 )
 }
@@ -49,6 +50,8 @@ pengls(
 \item{optControl}{control arguments, passed onto nlme::gls' control argument}
 
 \item{nfolds}{an integer, the number of folds used in cv.glmnet to find lambda}
+
+\item{penalty.factor}{passed onto glmnet:glmnet. The first entry is zero by default for the intercept, which is not shrunk}
 
 \item{...}{passed onto glmnet::glmnet}
 }

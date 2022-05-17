@@ -36,9 +36,7 @@ cv.pengls(
 
 \item{foldid}{An optional vector deffining the fold}
 
-\item{scale}{booleans, should regressors be scaled to zero mean and variance 1? Defaults to TRUE}
-
-\item{center}{booleans, should regressors be scaled to zero mean and variance 1? Defaults to TRUE}
+\item{scale, center}{booleans, should regressors be scaled to zero mean and variance 1? Defaults to TRUE}
 
 \item{cvType}{A character vector defining the type of cross-validation.
 Either "random" or "blocked", ignored if foldid is provided}

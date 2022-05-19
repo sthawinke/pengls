@@ -4,6 +4,7 @@
 #' @param obs vector of observed values
 #' @param loss a character vector indicating the loss type, see ?cv.pengls
 #' @return the evaluated loss
+#' @importFrom stats var
 getLoss = function(preds, obs, loss){
     SE = (preds-obs)^2
     switch(loss,

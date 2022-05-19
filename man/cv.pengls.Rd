@@ -48,6 +48,9 @@ Either "random" or "blocked", ignored if foldid is provided}
 
 \item{transFunArgs}{Additional arguments passed onto transFun}
 
+\item{loss}{a character vector, currently either 'R2' or 'MSE' indicating the
+loss function (although R2 is not a proper loss...)}
+
 \item{...}{passed onto glmnet::glmnet}
 }
 \value{
@@ -81,11 +84,12 @@ a <- rnorm(n, mean = b \%*\% rbinom(p, size = 1, p = 0.2)) #20\% signal
 #Compile to a matrix
 df <- data.frame("a" = a, "b" = b, GridSample)
 # Define the correlation structure (see ?nlme::gls), with initial nugget 0.5 and range 5
-corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugget" = 0.5))
+corStruct = corGaus(form = ~ x + y, nugget = TRUE,
+value = c("range" = 5, "nugget" = 0.5))
 #Fit the pengls model, for simplicity for a simple lambda
 register(MulticoreParam(3)) #Prepare multithereading
-penglsFitCV = cv.pengls(data = df, outVar = "a",
-xNames = grep(names(df), pattern = "b", value =TRUE),
+penglsFitCV = cv.pengls(data = df, outVar = "a", xNames = grep(names(df),
+pattern = "b", value = TRUE),
 glsSt = corStruct, nfolds = 5)
 penglsFitCV$lambda.1se #Lambda for 1 standard error rule
 penglsFitCV$cvOpt #Corresponding R2

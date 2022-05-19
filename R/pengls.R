@@ -56,7 +56,7 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
                                         msMaxIter = 5e2, niterEM = 1e3,
                                         msMaxEval=1e3), nfolds = 10, penalty.factor = c(0, rep(1, length(xNames))), ...){
    coords <- {
-      foo = strsplit(split = "+", as.character(attr(glsSt, "formula"))[2])[[1]] #Extract the coordinates from the formula
+      foo = trimws(strsplit(split = "\\+", as.character(attr(glsSt, "formula"))[2])[[1]]) #Extract the coordinates from the formula
       foo[!foo %in% c("+", " ")]
    }
    glsSt0 = glsStruct(glsSt) #Initialize correlation object

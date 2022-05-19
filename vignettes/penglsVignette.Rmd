@@ -14,7 +14,7 @@ vignette: >
 
 # Introduction
 
-This vignette demonstrates the use of the _pengls_ package for high-dimensional data with spatial or temporal autocorrelation. It consists of an iterative loop around the _nlme_ \parencite{Pinheiro2021} and _glmnet_ \parencite{Friedman2010} packages. Currently, only continuous outcomes and $R^2$ as performance measure are implemented.
+This vignette demonstrates the use of the _pengls_ package for high-dimensional data with spatial or temporal autocorrelation. It consists of an iterative loop around the _nlme_ \parencite{Pinheiro2021} and _glmnet_ \parencite{Friedman2010} packages. Currently, only continuous outcomes and $R^2$ and _MSE_ as performance measure are implemented.
 
 \setcounter{tocdepth}{5}
 \tableofcontents
@@ -171,6 +171,12 @@ To negate baseline differences at different timepoints, it may be useful to cent
 ```{r timeCourseScale}
 penglsFitCVtimeCenter <- cv.pengls(data = dfTime, outVar = "a", xNames = grep(names(dfTime), pattern = "b", value =TRUE), glsSt = corStructTime, nfolds = nfolds, cvType = "blocked", transFun = function(x) x-mean(x))
 penglsFitCVtimeCenter$cvOpt #Better performance
+```
+
+Alternatively, the mean squared error (MSE) can be used as loss function, rather than the default $R^2$:
+
+```{r spatialFitMSE}
+penglsFitCVtime <- cv.pengls(data = dfTime, outVar = "a", xNames = grep(names(dfTime), pattern = "b", value =TRUE), glsSt = corStructTime, nfolds = nfolds, loss =  "MSE")
 ```
 
 # Session info

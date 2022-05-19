@@ -18,6 +18,7 @@ cv.pengls(
   lambdas,
   transFun = "identity",
   transFunArgs = list(),
+  loss = c("R2", "MSE"),
   ...
 )
 }
@@ -90,4 +91,11 @@ penglsFitCV$lambda.1se #Lambda for 1 standard error rule
 penglsFitCV$cvOpt #Corresponding R2
 coef(penglsFitCV)
 penglsFitCV$foldid #The folds used
+#With MSE as loss function
+penglsFitCVmse = cv.pengls(data = df, outVar = "a",
+xNames = grep(names(df), pattern = "b", value =TRUE),
+glsSt = corStruct, nfolds = 5, loss = "MSE")
+penglsFitCVmse$lambda.1se #Lambda for 1 standard error rule
+penglsFitCVmse$cvOpt #Corresponding MSE
+coef(penglsFitCVmse)
 }

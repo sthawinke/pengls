@@ -16,7 +16,7 @@
 #' blockedFolds <- makeFolds(nfolds = nfolds, data, "blocked", c("x", "y"))
 makeFolds = function(nfolds, data, cvType, coords){
     folds <- switch(cvType,
-                   "random" = sample(nfolds, nrow(data), replace = TRUE),#Also uneven fold sizes
+                   "random" = sample(rep(seq_len(nfolds), length.out = nrow(data))),#Also uneven fold sizes
                    "blocked" = kmeans(data[, coords], centers = nfolds)$cluster,
                    stop("Unknown CV strategy"))
     while(any(table(folds)<=1)){ #Avoid single observation folds

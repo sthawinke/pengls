@@ -2,6 +2,7 @@
 
 S3method(coef,cv.pengls)
 S3method(coef,pengls)
+S3method(predict,cv.pengls)
 S3method(predict,pengls)
 S3method(print,cv.pengls)
 S3method(print,pengls)

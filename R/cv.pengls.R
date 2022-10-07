@@ -15,6 +15,7 @@
 #' \item{cvsd}{The standard error of R2 at the maximum}
 #' \item{cvOpt}{The R2 according to the 1 standard error rule}
 #' \item{coefs}{The matrix of coefficients for every lambda value}
+#' \item{bestFit}{The best fitting pengls model according to the 1 standard error rule}
 #' \item{lambda.min}{Lambda value with maximal R2}
 #' \item{lambda.1se}{Smallest lambda value within 1 standard error from the maximum}
 #' \item{foldid}{The folds}
@@ -56,6 +57,7 @@
 #' penglsFitCVmse$lambda.1se #Lambda for 1 standard error rule
 #' penglsFitCVmse$cvOpt #Corresponding MSE
 #' coef(penglsFitCVmse)
+#' predict(penglsFitCVmse)
 cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid, scale = TRUE, center = TRUE,
                    cvType = "blocked", lambdas, transFun = "identity",
                    transFunArgs = list(), loss = c("R2", "MSE"), ...){
@@ -104,7 +106,7 @@ cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid, scale 
     })
     coefs <- vapply(FUN.VALUE = numeric(length(xNames)+1), fullFits, function(x) as.vector(coef(x)))
     outList <- list("lambda" = lambdas, "cvm" = cvEsts, "cvsd" = sdMax,
-                   "cvOpt" = cvEsts[seId], "coefs" = coefs,
+                   "cvOpt" = cvEsts[seId], "coefs" = coefs, "bestFit" = fullFits[[seId]],
                    "lambda.min" = lambdas[maxId], "lambda.1se" = lambdas[seId],
                    "foldid" = foldid, "glsSt" = glsSt)
     class(outList) <- "cv.pengls"

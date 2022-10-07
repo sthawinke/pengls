@@ -30,6 +30,7 @@ test_that("cv.pengls function returns list with correct elements", {
     expect_s3_class(penglsFitCv, "cv.pengls")
     expect_output(print(penglsFitCv))
     expect_type(coef(penglsFitCv), "double")
+    expect_type(predict(penglsFitCv), "double")
 }
 )
 test_that("Parameters of correlation matrix are being estimated", {

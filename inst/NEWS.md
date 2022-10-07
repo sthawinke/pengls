@@ -15,3 +15,7 @@ First release
 
 -   Extend to MSE loss function
 -   Random fold splitting results in more even folds
+
+# 1.3.2
+
+ - With predict function for cv.pengls objects

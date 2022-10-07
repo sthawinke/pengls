@@ -4,10 +4,12 @@
 \alias{predict.pengls}
 \title{Make predictions from a pengls model}
 \usage{
-\method{predict}{pengls}(object, ...)
+\method{predict}{pengls}(object, newx, ...)
 }
 \arguments{
 \item{object}{A pengls object}
+
+\item{newx}{The test data}
 
 \item{...}{further arguments, currently ignored}
 }

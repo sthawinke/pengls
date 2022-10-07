@@ -22,6 +22,7 @@ test_that("pengls function returns list with correct elements", {
     expect_type(predict(penglsFit), "double")
     expect_output(print(penglsFit))
     expect_type(coef(penglsFit), "double")
+    expect_equal(length(predict(penglsFit, newx = b[seq_len(5), ])), 5)
 }
 )
 penglsFitCv <- cv.pengls(data = df, outVar = "out", xNames = grep(names(df), pattern = "b", value =TRUE),
@@ -31,6 +32,7 @@ test_that("cv.pengls function returns list with correct elements", {
     expect_output(print(penglsFitCv))
     expect_type(coef(penglsFitCv), "double")
     expect_type(predict(penglsFitCv), "double")
+    expect_equal(length(predict(penglsFitCv, newx = b[seq_len(5), ])), 5)
 }
 )
 test_that("Parameters of correlation matrix are being estimated", {

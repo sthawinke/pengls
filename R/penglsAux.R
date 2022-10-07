@@ -21,13 +21,16 @@ coef.cv.pengls = function(object, which = "lambda.1se", ...) {
 }
 #' Make predictions from a pengls model
 #' @param object A pengls object
+#' @param newx The test data
 #' @param ... further arguments, currently ignored
 #' @export
 #' @importFrom stats predict
 #' @method predict pengls
 #' @return A vector with predicted values
-predict.pengls = function(object, ...) {
-    predict(object$glmnet, newx = cbind(1,as.matrix(object$data[, object$xNames])))
+predict.pengls = function(object, newx, ...) {
+    if(missing(newx))
+        newx = as.matrix(object$data[, object$xNames])
+    predict(object$glmnet, newx = cbind(1, newx), ...)
 }
 #' Make predictions from a cv.pengls model
 #' @param object A cv.pengls object

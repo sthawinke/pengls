@@ -37,7 +37,7 @@ predict.pengls = function(object, ...) {
 #' @method predict cv.pengls
 #' @return A vector with predicted values
 predict.cv.pengls = function(object, ...) {
-    predict.pengls(object$bestFit)
+    predict.pengls(object$bestFit, ...)
 }
 #' Print a summary of a pengls model
 #' @param x A pengls object

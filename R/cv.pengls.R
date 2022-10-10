@@ -108,7 +108,7 @@ cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid, scale 
     outList <- list("lambda" = lambdas, "cvm" = cvEsts, "cvsd" = sdMax,
                    "cvOpt" = cvEsts[seId], "coefs" = coefs, "bestFit" = fullFits[[seId]],
                    "lambda.min" = lambdas[maxId], "lambda.1se" = lambdas[seId],
-                   "foldid" = foldid, "glsSt" = glsSt)
+                   "foldid" = foldid, "glsSt" = glsSt, "loss" = loss)
     class(outList) <- "cv.pengls"
     return(outList)
 }

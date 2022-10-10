@@ -61,5 +61,5 @@ print.pengls = function(x, ...) {
 print.cv.pengls = function(x, ...) {
     Class  <- class(x$glsSt)[1]
     cat("Cross-validated pengls model with correlation structure:", Class, "\n and", sum(coef(x)!=0)-1, "non-zero coefficients.\n",
-        length(unique(x$foldid)), "fold cross-validation yielded an estimated R2 of", x$cvOpt, ".")
+        length(unique(x$foldid)), "fold cross-validation yielded an estimated", x$loss, "of", x$cvOpt, ".")
 }

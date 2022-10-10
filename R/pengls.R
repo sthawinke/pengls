@@ -48,9 +48,9 @@
 #' dfTime <- data.frame("a" = a, "b" = b, "t" = seq_len(n))
 #' dfTime$a[-1] = dfTime$a[-n]*0.25 #Some temporal signal
 #' corStructTime <- corAR1(form = ~ t, value = 0.5)
-#' penglsFitTime <- try(pengls(data = dfTime, outVar = "a",
+#' penglsFitTime <- pengls(data = dfTime, outVar = "a",
 #' xNames = grep(names(dfTime), pattern = "b", value =TRUE),
-#' glsSt = corStructTime, nfolds = 5))
+#' glsSt = corStructTime, nfolds = 5)
 pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
                 maxIter = 3e1, tol = 5e-2, verbose = FALSE, scale = FALSE, center = FALSE,
                 optControl = lmeControl(opt = "optim", maxIter = 5e2, msVerbose = verbose,

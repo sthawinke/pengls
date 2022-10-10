@@ -84,6 +84,7 @@ penglsPred <- predict(penglsFit)
 The method can also account for temporal autocorrelation by defining another correlation structure from the _nlme_ package, e.g. autocorrelation structure of order 1:
 
 ```{r timeSetup}
+set.seed(354509)
 n <- 100 #Sample size
 p <- 10 #Number of features
 #Generate outcome and regressors
@@ -121,7 +122,6 @@ register(MulticoreParam(3)) #Prepare multithereading
 nfolds <- 3 #Number of cross-validation folds
 ```
 
-
 The function is called similarly to _cv.glmnet_:
 
 ```{r cvpengls}
@@ -133,7 +133,6 @@ Check the result:
 ```{r printCV}
 penglsFitCV
 ```
-
 
 By default, the 1 standard error is used to determine the optimal value of $\lambda$ \parencite{Friedman2010}:
 

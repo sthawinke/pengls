@@ -77,7 +77,7 @@ cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid, scale 
         id = foldid!=i #Leave out test fold
         lapply(lambdas, function(lam){
                 pengls(data = data[id,], glsSt = glsSt, xNames = xNames,
-                     outVar = outVar, lambda = lam)
+                     outVar = outVar, lambda = lam, ...)
         })
     })
     #Find R2 on left out folds
@@ -103,7 +103,7 @@ cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid, scale 
 
     cvR2 <- cvEsts[seId]
     fullFits <- bplapply(lambdas, function(lam){ #Now the full fits with all lambdas
-        pengls(data = data, glsSt = glsSt, xNames = xNames, outVar = outVar, lambda = lam)
+        pengls(data = data, glsSt = glsSt, xNames = xNames, outVar = outVar, lambda = lam, ...)
     })
     coefs <- vapply(FUN.VALUE = numeric(length(xNames)+1), fullFits, function(x) as.vector(coef(x)))
     outList <- list("lambda" = lambdas, "cvm" = cvEsts, "cvsd" = sdMax,

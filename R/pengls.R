@@ -16,8 +16,12 @@
 #' @param penalty.factor passed onto glmnet:glmnet. The first entry is zero by default for the intercept, which is not shrunk
 #' @param ... passed onto glmnet::glmnet
 #' @return A list with components
-#' \item{corMat}{The square root of the inverse correlation matrix}
-#' \item{Coef}{The coefficients of the correlation object}
+#' \item{glmnet}{The glmnet fit, which can be manipulated as such}
+#' \item{gls}{A list with info on the estimated correlation matrix}
+#' \item{iter}{The iterations needed}
+#' \item{conv}{A boolean, indicating whether the iteration between mean model and covariance estimation converged}
+#' \item{xNames,data,glsSt,outVar}{As provided}
+#' \item{lambda}{The lambda penalty paraneter used}
 #' @import glmnet nlme
 #' @importFrom stats coef
 #' @seealso cv.pengls

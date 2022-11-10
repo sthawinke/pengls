@@ -57,8 +57,12 @@ pengls(
 }
 \value{
 A list with components
-\item{corMat}{The square root of the inverse correlation matrix}
-\item{Coef}{The coefficients of the correlation object}
+\item{glmnet}{The glmnet fit, which can be manipulated as such}
+\item{gls}{A list with info on the estimated correlation matrix}
+\item{iter}{The iterations needed}
+\item{conv}{A boolean, indicating whether the iteration between mean model and covariance estimation converged}
+\item{xNames,data,glsSt,outVar}{As provided}
+\item{lambda}{The lambda penalty paraneter used}
 }
 \description{
 Iterative estimation of penalised generalised least squares
@@ -86,9 +90,10 @@ penglsFit <- pengls(data = df, outVar = "a", xNames = grep(names(df), pattern = 
 glsSt = corStruct, nfolds = 5)
 
 ### Example 2: timecourse data
-dfTime <- data.frame("a" = a, "b" = b, "t" = seq_len(50))
+dfTime <- data.frame("a" = a, "b" = b, "t" = seq_len(n))
+dfTime$a[-1] = dfTime$a[-n]*0.25 #Some temporal signal
 corStructTime <- corAR1(form = ~ t, value = 0.5)
-penglsFit <- pengls(data = dfTime, outVar = "a",
+penglsFitTime <- pengls(data = dfTime, outVar = "a",
 xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 glsSt = corStructTime, nfolds = 5)
 }

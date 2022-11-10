@@ -65,6 +65,7 @@ A list with components
 \item{lambda.1se}{Smallest lambda value within 1 standard error from the maximum}
 \item{foldid}{The folds}
 \item{glsSt}{The nlme correlation object}
+\item{loss}{The loss function used}
 }
 \description{
 Peform cross-validation pengls

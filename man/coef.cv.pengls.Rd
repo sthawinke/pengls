@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{A cv.pengls object}
 
-\item{which}{a character string, for which lambda shoudl coefficients be returned}
+\item{which}{a character string, for which lambda should coefficients be returned}
 
 \item{...}{further arguments, currently ignored}
 }

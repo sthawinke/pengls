@@ -17,8 +17,8 @@ pengls(
   verbose = FALSE,
   scale = FALSE,
   center = FALSE,
-  optControl = lmeControl(opt = "optim", maxIter = 500, msVerbose = verbose, msMaxIter
-    = 500, niterEM = 1000, msMaxEval = 1000),
+  optControl = lmeControl(opt = "optim", maxIter = 500, msVerbose = verbose, msMaxIter =
+    500, niterEM = 1000, msMaxEval = 1000),
   nfolds = 10,
   penalty.factor = c(0, rep(1, length(xNames))),
   ...

@@ -59,7 +59,7 @@
 #' penglsFitCVmse$cvOpt #Corresponding MSE
 #' coef(penglsFitCVmse)
 #' predict(penglsFitCVmse)
-cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid, scale = TRUE, center = TRUE,
+cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid, scale = FALSE, center = FALSE,
                    cvType = "blocked", lambdas, transFun = "identity",
                    transFunArgs = list(), loss = c("R2", "MSE"), ...){
     loss = match.arg(loss)

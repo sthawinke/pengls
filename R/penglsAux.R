@@ -10,14 +10,14 @@ coef.pengls = function(object, ...) {
 }
 #' Extract coefficients from a cv.pengls model
 #' @param object A cv.pengls object
-#' @param which a character string, for which lambda shoudl coefficients be returned
+#' @param which a character string, for which lambda should coefficients be returned
 #' @param ... further arguments, currently ignored
 #'
 #' @method coef cv.pengls
 #' @export
 #' @return The vector of coefficients
 coef.cv.pengls = function(object, which = "lambda.1se", ...) {
-    object$coefs[,object$lambda == object[[which]]][-1]
+    object$coefs[,object$lambda == object[[which]]]
 }
 #' Make predictions from a pengls model
 #' @param object A pengls object

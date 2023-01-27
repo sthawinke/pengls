@@ -67,9 +67,10 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
    glsSt0 = glsStruct(glsSt) #Initialize correlation object
    if(missing(corMat) )
         corMat <- diag(nrow(data)) #Starting values for correlation matrix
-   data[, xNames] = scale(data[, xNames], scale = scale, center = center) #Center and scale
+   if(any(c(scale, center)))
+      data[, xNames] = scale(data[, xNames], scale = scale, center = center) #Center and scale
    if(missing(lambda)){
-       if(verbose) cat("Fitting naieve model...\n")
+       if(verbose) cat("Fitting naive model...\n")
        naieveFit <- cv.glmnet(x = as.matrix(data[,xNames]), y = data[,outVar],
                               nfolds = nfolds, penalty.factor = penalty.factor[-1], ...) #Exclude intercept heres
        lambda <- naieveFit$lambda.1se

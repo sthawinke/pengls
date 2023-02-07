@@ -7,7 +7,8 @@
 #' @param outVar name of the outcome variable in data
 #' @param corMat a starting value for the correlation matrix. Taken to be a diagonal matrix if missing
 #' @param lambda The penalty value for glmnet. If missing, the optimal value of vanilla glmnet without autocorrelation component is used
-#' @param foldid An optional vector deffining the fold
+#' @param foldid An optional vector defining the fold
+#' @param exclude indices of predictors to be excluded from intercept + xNames
 #' @param maxIter maximum number of iterations between glmnet and gls
 #' @param tol A convergence tolerance
 #' @param verbose a boolean, should output be printed?
@@ -55,7 +56,7 @@
 #' penglsFitTime <- pengls(data = dfTime, outVar = "a",
 #' xNames = grep(names(dfTime), pattern = "b", value =TRUE),
 #' glsSt = corStructTime, nfolds = 5)
-pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
+pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid, exclude = NULL,
                 maxIter = 3e1, tol = 5e-2, verbose = FALSE, scale = FALSE, center = FALSE,
                 optControl = lmeControl(opt = "optim", maxIter = 5e2, msVerbose = verbose,
                                         msMaxIter = 5e2, niterEM = 1e3,
@@ -71,7 +72,7 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
       data[, xNames] = scale(data[, xNames], scale = scale, center = center) #Center and scale
    if(missing(lambda)){
        if(verbose) cat("Fitting naive model...\n")
-       naieveFit <- cv.glmnet(x = as.matrix(data[,xNames]), y = data[,outVar],
+       naieveFit <- cv.glmnet(x = as.matrix(data[,xNames]), y = data[,outVar], exclude = exclude-1,
                               nfolds = nfolds, penalty.factor = penalty.factor[-1], ...) #Exclude intercept heres
        lambda <- naieveFit$lambda.1se
    }
@@ -84,7 +85,7 @@ pengls = function(data, glsSt, xNames, outVar, corMat, lambda, foldid,
         oldPred <- preds #Store old predictions
         tmpDat <- corMat %*% xY #Pre-multiply data by correlation matrix
         glmnetFit <- glmnet(x = tmpDat[,c("Intercept", xNames)], y = tmpDat[,outVar],
-                            intercept = FALSE, penalty.factor = penalty.factor,
+                            intercept = FALSE, penalty.factor = penalty.factor, exclude = exclude,
                             lambda = lambda, ...) #Fit glmnet, do not shrink intercept
         preds <- as.vector(xY[, -2] %*% coef(glmnetFit)[-1]) #Make predictions
         margCorMat <- getCorMat(data = cbind("a" = mcA - preds, data[, coords, drop = FALSE]), outVar = "a", control = optControl, glsSt = glsSt0)#Find the correlation matrix

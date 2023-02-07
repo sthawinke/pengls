@@ -12,6 +12,7 @@ pengls(
   corMat,
   lambda,
   foldid,
+  exclude = NULL,
   maxIter = 30,
   tol = 0.05,
   verbose = FALSE,
@@ -37,7 +38,9 @@ pengls(
 
 \item{lambda}{The penalty value for glmnet. If missing, the optimal value of vanilla glmnet without autocorrelation component is used}
 
-\item{foldid}{An optional vector deffining the fold}
+\item{foldid}{An optional vector defining the fold}
+
+\item{exclude}{indices of predictors to be excluded from intercept + xNames}
 
 \item{maxIter}{maximum number of iterations between glmnet and gls}
 

@@ -35,7 +35,7 @@ cv.pengls(
 
 \item{nfolds}{an integer, the number of folds used in cv.glmnet to find lambda}
 
-\item{foldid}{An optional vector deffining the fold}
+\item{foldid}{An optional vector defining the fold}
 
 \item{scale, center}{booleans, should regressors be scaled to zero mean and variance 1? Defaults to TRUE}
 

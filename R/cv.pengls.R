@@ -60,14 +60,15 @@
 #' coef(penglsFitCVmse)
 #' predict(penglsFitCVmse)
 cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid, scale = FALSE, center = FALSE,
-                   cvType = "blocked", lambdas, transFun = "identity",
+                   cvType = "blocked", lambdas, transFun = "identity", exclude = NULL,
                    transFunArgs = list(), loss = c("R2", "MSE"), ...){
     loss = match.arg(loss)
     if(missing(foldid))
         foldid <- makeFolds(nfolds, data, cvType)
-    data[, xNames] = scale(data[, xNames], scale = scale, center = center) #Center and scale
+    if(any(c(scale, center)))
+        data[, xNames] = scale(data[, xNames], scale = scale, center = center) #Center and scale
     if(missing(lambdas)){
-        naieveFit <- cv.glmnet(x = as.matrix(data[,xNames]),
+        naieveFit <- cv.glmnet(x = as.matrix(data[,xNames]), exclude = exclude - 1,
                               y = data[,outVar], foldid = foldid, ...)
         #The naive fit provides a lambda sequence
         lambdas <- naieveFit$lambda

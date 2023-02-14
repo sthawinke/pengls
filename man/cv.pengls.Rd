@@ -17,6 +17,7 @@ cv.pengls(
   cvType = "blocked",
   lambdas,
   transFun = "identity",
+  exclude = NULL,
   transFunArgs = list(),
   loss = c("R2", "MSE"),
   ...
@@ -45,6 +46,8 @@ Either "random" or "blocked", ignored if foldid is provided}
 \item{lambdas}{an optional lambda sequence}
 
 \item{transFun}{a transformation function to apply to predictions and outcome in the cross-validation}
+
+\item{exclude}{indices of predictors to be excluded from intercept + xNames}
 
 \item{transFunArgs}{Additional arguments passed onto transFun}
 

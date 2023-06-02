@@ -20,6 +20,7 @@ cv.pengls(
   exclude = NULL,
   transFunArgs = list(),
   loss = c("R2", "MSE"),
+  verbose = FALSE,
   ...
 )
 }
@@ -53,6 +54,8 @@ Either "random" or "blocked", ignored if foldid is provided}
 
 \item{loss}{a character vector, currently either 'R2' or 'MSE' indicating the
 loss function (although R2 is not a proper loss...)}
+
+\item{verbose}{a boolean, should output be printed?}
 
 \item{...}{passed onto glmnet::glmnet}
 }

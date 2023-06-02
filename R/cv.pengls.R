@@ -61,7 +61,7 @@
 #' predict(penglsFitCVmse)
 cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid, scale = FALSE, center = FALSE,
                    cvType = "blocked", lambdas, transFun = "identity", exclude = NULL,
-                   transFunArgs = list(), loss = c("R2", "MSE"), ...){
+                   transFunArgs = list(), loss = c("R2", "MSE"), verbose = FALSE, ...){
     loss = match.arg(loss)
     if(missing(foldid))
         foldid <- makeFolds(nfolds, data, cvType)
@@ -76,6 +76,8 @@ cv.pengls = function(data, glsSt, xNames, outVar, corMat, nfolds, foldid, scale 
     uniqueFolds <- unique(foldid)
     fits <- bplapply(uniqueFolds, function(i){
         id = foldid!=i #Leave out test fold
+        if(verbose)
+            cat("Fold", i, "\t")
         lapply(lambdas, function(lam){
                 pengls(data = data[id,], glsSt = glsSt, xNames = xNames,
                      outVar = outVar, lambda = lam, ...)

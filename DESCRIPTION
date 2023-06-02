@@ -15,8 +15,7 @@ License: GPL-2
 Encoding: UTF-8
 RoxygenNote: 7.2.3
 Imports: glmnet, nlme, stats, BiocParallel
-Suggests:
-    knitr,rmarkdown,testthat
+Suggests: knitr,rmarkdown,testthat
 VignetteBuilder: knitr
 Depends: R (>= 4.2.0)
 biocViews: Transcriptomics, Regression, TimeCourse, Spatial

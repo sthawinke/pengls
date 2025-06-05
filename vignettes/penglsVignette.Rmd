@@ -115,7 +115,7 @@ The _pengls_ package also provides cross-validation for finding the optimal $\la
 
 ```{r registerMulticores}
 library(BiocParallel)
-register(MulticoreParam(3)) #Prepare multithereading
+register(MulticoreParam(2)) #Prepare multithereading
 ```
 
 ```{r, nfolds}

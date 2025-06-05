@@ -43,7 +43,7 @@
 #' corStruct = corGaus(form = ~ x + y, nugget = TRUE,
 #' value = c("range" = 5, "nugget" = 0.5))
 #' #Fit the pengls model, for simplicity for a simple lambda
-#' register(MulticoreParam(3)) #Prepare multithereading
+#' register(MulticoreParam(2)) #Prepare multithereading
 #' penglsFitCV = cv.pengls(data = df, outVar = "a", xNames = grep(names(df),
 #' pattern = "b", value = TRUE),
 #' glsSt = corStruct, nfolds = 5)

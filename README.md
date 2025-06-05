@@ -1,9 +1,9 @@
 
 This repository demonstrates the use of the *pengls* package for
 high-dimensional data with spatial or temporal autocorrelation. It
-consists of an iterative loop around the *nlme*  and *glmnet*  packages.
-Currently, only continuous outcomes and \(R^2\) as performance measure
-are implemented.
+consists of an iterative loop around the *nlme* and *glmnet* packages.
+Currently, only continuous outcomes and $R^2$ as performance measure are
+implemented.
 
 # Installation instuctions
 
@@ -22,7 +22,7 @@ suppressPackageStartupMessages(library(pengls))
 cat("pengls package version", as.character(packageVersion("pengls")), "\n")
 ```
 
-    ## pengls package version 0.99.5
+    ## pengls package version 1.5.0
 
 # Illustration
 
@@ -60,7 +60,7 @@ corStruct <- corGaus(form = ~ x + y, nugget = TRUE, value = c("range" = 5, "nugg
 
 Finally the model is fitted with a single outcome variable and large
 number of regressors, with the chosen covariance structure and for a
-prespecified penalty parameter \(\lambda=0.2\).
+prespecified penalty parameter $\lambda=0.2$.
 
 ``` r
 #Fit the pengls model, for simplicity for a simple lambda
@@ -81,7 +81,7 @@ penglsFit
 ```
 
     ## pengls model with correlation structure: corGaus 
-    ##  and 46 non-zero coefficients
+    ##  and 47 non-zero coefficients
 
 ``` r
 penglsCoef <- coef(penglsFit)

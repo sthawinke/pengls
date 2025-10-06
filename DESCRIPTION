@@ -13,7 +13,7 @@ Description: Combine generalised least squares methodology from the nlme package
     high dimensional datasets that exhibit autocorrelation, such as spatial or temporal data.
 License: GPL-2
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports: glmnet, nlme, stats, BiocParallel
 Suggests: knitr,rmarkdown,testthat
 VignetteBuilder: knitr

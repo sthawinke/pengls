@@ -1,7 +1,7 @@
 Package: pengls
 Type: Package
 Title: Fit Penalised Generalised Least Squares models
-Version: 1.15.1
+Version: 1.15.2
 Authors@R: 
     c(person(given = "Stijn", family = "Hawinkel", 
     email = "stijn.hawinkel@psb.ugent.be", 
@@ -17,6 +17,7 @@ RoxygenNote: 7.3.3
 Imports: glmnet, nlme, stats, BiocParallel
 Suggests: knitr,rmarkdown,testthat
 VignetteBuilder: knitr
-Depends: R (>= 4.2.0)
+Depends: R (>= 4.5.0)
 biocViews: Transcriptomics, Regression, TimeCourse, Spatial
-BugReports: https://github.com/sthawinke/pengls
+BugReports: https://github.com/sthawinke/pengls/issues
+URL: https://github.com/sthawinke/pengls

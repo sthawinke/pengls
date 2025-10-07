@@ -26,3 +26,7 @@ First release
 # 1.15.1
 
  - Return named coefficients
+ 
+# 1.15.2
+
+ - Include citation to publication through CITATION file
